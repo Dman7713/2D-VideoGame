@@ -9,6 +9,7 @@ public class PlatformerMovement : MonoBehaviour
     [SerializeField]
     float jumpSpeed = 2f;
     bool grounded = false;
+    [SerializeField]
     // Start is called before the first frame update
     void Start()
     {
