@@ -2,15 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour
 {
     [SerializeField]
-    int health = 10;
+    public int health = 10;
     [SerializeField]
     float timer = 0f;
     [SerializeField]
     float tickDamage = 1f;
+    Image healthBar;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,6 +23,7 @@ public class PlayerHealth : MonoBehaviour
     void Update()
     {
         timer += Time.deltaTime; 
+
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -31,6 +34,7 @@ public class PlayerHealth : MonoBehaviour
         {
             //health = health - 1;
             health -= 1;
+            
             //health--;
         }
     }
