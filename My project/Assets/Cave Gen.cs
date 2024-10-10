@@ -2,8 +2,7 @@ using UnityEngine;
 
 public class CaveGenerator : MonoBehaviour
 {
-    public GameObject wallPrefab; // Reference to the wall prefab
-    public GameObject floorPrefab; // Reference to the floor prefab (optional)
+    public GameObject floorPrefab; // Reference to the floor prefab
 
     public int width = 50;
     public int height = 50;
@@ -48,9 +47,9 @@ public class CaveGenerator : MonoBehaviour
             {
                 int surroundingWalls = GetSurroundingWallCount(oldMap, x, y);
                 if (surroundingWalls > 4)
-                    newMap[x, y] = 1;
+                    newMap[x, y] = 1; // wall
                 else if (surroundingWalls < 4)
-                    newMap[x, y] = 0;
+                    newMap[x, y] = 0; // empty
                 else
                     newMap[x, y] = oldMap[x, y];
             }
@@ -85,14 +84,9 @@ public class CaveGenerator : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             {
-                if (map[x, y] == 1)
+                if (map[x, y] == 0)
                 {
-                    // Instantiate wall prefab
-                    Instantiate(wallPrefab, new Vector3(x, y, 0), Quaternion.identity);
-                }
-                else
-                {
-                    // Optional: Instantiate floor prefab if desired
+                    // Instantiate floor prefab for empty tiles
                     Instantiate(floorPrefab, new Vector3(x, y, 0), Quaternion.identity);
                 }
             }
