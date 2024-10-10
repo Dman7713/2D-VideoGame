@@ -10,6 +10,9 @@ public class PlatformerMovement : MonoBehaviour
     float jumpSpeed = 2f;
     bool grounded = false;
     [SerializeField]
+    float cyoteTime = 2;
+    [SerializeField]
+    float timer = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,11 +27,18 @@ public class PlatformerMovement : MonoBehaviour
         velocity.x = moveX * moveSpeed;
         GetComponent<Rigidbody2D>().velocity = velocity;
         //need to find a way to know if we are on the ground
+        timer += Time.deltaTime;
+        if(timer > cyoteTime)
+        {
+        grounded = false;
+
+        }
         if (Input.GetButtonDown("Jump") && grounded)
         {
             GetComponent<Rigidbody2D>().AddForce(new Vector2(0, 100 * jumpSpeed));
             grounded = false;
         }
+         
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -41,7 +51,7 @@ public class PlatformerMovement : MonoBehaviour
     {
         if(collision.gameObject.layer == 6)
         {
-            grounded = false;
+            timer = 0;
         }
     }
 
