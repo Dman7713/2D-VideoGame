@@ -1,31 +1,27 @@
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+using UnityEngine.Tilemaps;
 
 public class CaveGenerator : MonoBehaviour
 {
-    public GameObject floorPrefab; // Reference to the floor prefab
-    public Transform player; // Reference to the player
-
-    public int width = 50;
-    public int height = 50;
-    public float fillProbability = 0.45f;
-    public int iterations = 5;
-    public float renderDistance = 10f; // Distance around the player to render
-    public int chunkSize = 10; // Size of each chunk
+    public Tilemap tilemap; // Reference to the Tilemap
+    public TileBase floorTile; // Reference to the Tile (Rule Tile or any TileBase)
+    public int width = 50; // Width of the tilemap
+    public int height = 50; // Height of the tilemap
+    public float fillProbability = 0.45f; // Initial fill probability
+    public int smoothingIterations = 5; // Number of smoothing iterations
 
     private int[,] map;
-    private Dictionary<Vector2Int, GameObject> chunks = new Dictionary<Vector2Int, GameObject>();
 
-    void Start()
+    private void Start()
     {
         GenerateCave();
-        StartCoroutine(UpdateCave());
     }
 
     void GenerateCave()
     {
         map = new int[width, height];
+
+        // Randomly fill the map
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
@@ -34,11 +30,14 @@ public class CaveGenerator : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < iterations; i++)
+        // Smooth the map
+        for (int i = 0; i < smoothingIterations; i++)
         {
             map = SmoothMap(map);
         }
 
+        // Populate the Tilemap with the final cave layout
+        PopulateTilemap();
         Debug.Log("Cave generated.");
     }
 
@@ -52,11 +51,11 @@ public class CaveGenerator : MonoBehaviour
             {
                 int surroundingWalls = GetSurroundingWallCount(oldMap, x, y);
                 if (surroundingWalls > 4)
-                    newMap[x, y] = 1; // wall
+                    newMap[x, y] = 1; // Wall
                 else if (surroundingWalls < 4)
-                    newMap[x, y] = 0; // empty
+                    newMap[x, y] = 0; // Empty
                 else
-                    newMap[x, y] = oldMap[x, y];
+                    newMap[x, y] = oldMap[x, y]; // Preserve state
             }
         }
 
@@ -82,60 +81,16 @@ public class CaveGenerator : MonoBehaviour
         return wallCount;
     }
 
-    IEnumerator UpdateCave()
+    void PopulateTilemap()
     {
-        while (true)
+        tilemap.ClearAllTiles(); // Clear previous tiles before populating
+        for (int x = 0; x < width; x++)
         {
-            int playerX = Mathf.FloorToInt(player.position.x / chunkSize);
-            int playerY = Mathf.FloorToInt(player.position.y / chunkSize);
-
-            // Generate or update chunks within render distance
-            for (int x = playerX - Mathf.FloorToInt(renderDistance / chunkSize); x <= playerX + Mathf.FloorToInt(renderDistance / chunkSize); x++)
+            for (int y = 0; y < height; y++)
             {
-                for (int y = playerY - Mathf.FloorToInt(renderDistance / chunkSize); y <= playerY + Mathf.FloorToInt(renderDistance / chunkSize); y++)
+                if (map[x, y] == 0) // 0 represents empty space
                 {
-                    Vector2Int chunkPosition = new Vector2Int(x, y);
-
-                    if (!chunks.ContainsKey(chunkPosition))
-                    {
-                        // Create and store a new chunk
-                        GameObject chunk = new GameObject($"Chunk_{x}_{y}");
-                        chunks[chunkPosition] = chunk;
-                        GenerateChunk(chunkPosition, chunk);
-                    }
-                }
-            }
-
-            // Clean up chunks that are out of range
-            List<Vector2Int> keysToRemove = new List<Vector2Int>();
-            foreach (var kvp in chunks)
-            {
-                if (Mathf.Abs(kvp.Key.x - playerX) > Mathf.FloorToInt(renderDistance / chunkSize) ||
-                    Mathf.Abs(kvp.Key.y - playerY) > Mathf.FloorToInt(renderDistance / chunkSize))
-                {
-                    keysToRemove.Add(kvp.Key);
-                    Destroy(kvp.Value); // Destroy the chunk GameObject
-                }
-            }
-
-            foreach (var key in keysToRemove)
-            {
-                chunks.Remove(key);
-            }
-
-            yield return new WaitForSeconds(1f); // Adjust wait time as needed
-        }
-    }
-
-    void GenerateChunk(Vector2Int chunkPosition, GameObject chunk)
-    {
-        for (int x = chunkPosition.x * chunkSize; x < (chunkPosition.x + 1) * chunkSize; x++)
-        {
-            for (int y = chunkPosition.y * chunkSize; y < (chunkPosition.y + 1) * chunkSize; y++)
-            {
-                if (x >= 0 && y >= 0 && x < width && y < height && map[x, y] == 0)
-                {
-                    Instantiate(floorPrefab, new Vector3(x, y, 0), Quaternion.identity, chunk.transform);
+                    tilemap.SetTile(new Vector3Int(x, y, 0), floorTile); // Set the tile
                 }
             }
         }
