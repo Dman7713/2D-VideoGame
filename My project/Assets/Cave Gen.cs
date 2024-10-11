@@ -1,23 +1,30 @@
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 public class CaveGenerator : MonoBehaviour
 {
     public GameObject floorPrefab; // Reference to the floor prefab
+    public Transform player; // Reference to the player
 
     public int width = 50;
     public int height = 50;
     public float fillProbability = 0.45f;
     public int iterations = 5;
+    public float renderDistance = 10f; // Distance around the player to render
+    public int chunkSize = 10; // Size of each chunk
+
     private int[,] map;
+    private Dictionary<Vector2Int, GameObject> chunks = new Dictionary<Vector2Int, GameObject>();
 
     void Start()
     {
         GenerateCave();
+        StartCoroutine(UpdateCave());
     }
 
     void GenerateCave()
     {
-        // Initialize the map with random values
         map = new int[width, height];
         for (int x = 0; x < width; x++)
         {
@@ -27,14 +34,12 @@ public class CaveGenerator : MonoBehaviour
             }
         }
 
-        // Apply Cellular Automata
         for (int i = 0; i < iterations; i++)
         {
             map = SmoothMap(map);
         }
 
-        // Create the cave in the game world
-        CreateCave();
+        Debug.Log("Cave generated.");
     }
 
     int[,] SmoothMap(int[,] oldMap)
@@ -77,17 +82,60 @@ public class CaveGenerator : MonoBehaviour
         return wallCount;
     }
 
-    void CreateCave()
+    IEnumerator UpdateCave()
     {
-        // Instantiate tiles based on the map
-        for (int x = 0; x < width; x++)
+        while (true)
         {
-            for (int y = 0; y < height; y++)
+            int playerX = Mathf.FloorToInt(player.position.x / chunkSize);
+            int playerY = Mathf.FloorToInt(player.position.y / chunkSize);
+
+            // Generate or update chunks within render distance
+            for (int x = playerX - Mathf.FloorToInt(renderDistance / chunkSize); x <= playerX + Mathf.FloorToInt(renderDistance / chunkSize); x++)
             {
-                if (map[x, y] == 0)
+                for (int y = playerY - Mathf.FloorToInt(renderDistance / chunkSize); y <= playerY + Mathf.FloorToInt(renderDistance / chunkSize); y++)
                 {
-                    // Instantiate floor prefab for empty tiles
-                    Instantiate(floorPrefab, new Vector3(x, y, 0), Quaternion.identity);
+                    Vector2Int chunkPosition = new Vector2Int(x, y);
+
+                    if (!chunks.ContainsKey(chunkPosition))
+                    {
+                        // Create and store a new chunk
+                        GameObject chunk = new GameObject($"Chunk_{x}_{y}");
+                        chunks[chunkPosition] = chunk;
+                        GenerateChunk(chunkPosition, chunk);
+                    }
+                }
+            }
+
+            // Clean up chunks that are out of range
+            List<Vector2Int> keysToRemove = new List<Vector2Int>();
+            foreach (var kvp in chunks)
+            {
+                if (Mathf.Abs(kvp.Key.x - playerX) > Mathf.FloorToInt(renderDistance / chunkSize) ||
+                    Mathf.Abs(kvp.Key.y - playerY) > Mathf.FloorToInt(renderDistance / chunkSize))
+                {
+                    keysToRemove.Add(kvp.Key);
+                    Destroy(kvp.Value); // Destroy the chunk GameObject
+                }
+            }
+
+            foreach (var key in keysToRemove)
+            {
+                chunks.Remove(key);
+            }
+
+            yield return new WaitForSeconds(1f); // Adjust wait time as needed
+        }
+    }
+
+    void GenerateChunk(Vector2Int chunkPosition, GameObject chunk)
+    {
+        for (int x = chunkPosition.x * chunkSize; x < (chunkPosition.x + 1) * chunkSize; x++)
+        {
+            for (int y = chunkPosition.y * chunkSize; y < (chunkPosition.y + 1) * chunkSize; y++)
+            {
+                if (x >= 0 && y >= 0 && x < width && y < height && map[x, y] == 0)
+                {
+                    Instantiate(floorPrefab, new Vector3(x, y, 0), Quaternion.identity, chunk.transform);
                 }
             }
         }
