@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d1514134bc4fbd41bb739b1b9a49231, type: 3}
   m_Name: Stone
   m_EditorClassIdentifier: 
-  m_DefaultSprite: {fileID: 1088548359, guid: 0c6850550f9a1f44a8701e448943294e, type: 3}
+  m_DefaultSprite: {fileID: 1296346109, guid: 54659727967cc7e4d8aea3758e3d8ba7, type: 3}
   m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 1
   m_TilingRules:
   - m_Id: 0
     m_Sprites:
-    - {fileID: 1088548359, guid: 0c6850550f9a1f44a8701e448943294e, type: 3}
+    - {fileID: 1934894326, guid: 54659727967cc7e4d8aea3758e3d8ba7, type: 3}
     m_GameObject: {fileID: 0}
     m_MinAnimationSpeed: 1
     m_MaxAnimationSpeed: 1

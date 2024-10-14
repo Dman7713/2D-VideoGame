@@ -33,7 +33,6 @@ public class CaveGenerator : MonoBehaviour
     [SerializeField] private int minOreClusterSize = 3;
     [SerializeField] private int maxOreClusterSize = 8;
 
-    // New parameters for liquid generation
     [Header("Liquid Settings")]
     [SerializeField] private int waterCount = 3; // Number of water bodies to generate
     [SerializeField] private int lavaCount = 2; // Number of lava bodies to generate
@@ -55,23 +54,36 @@ public class CaveGenerator : MonoBehaviour
         Debug.Log("Cave with unique-shaped biomes and ores generated.");
     }
 
+    // Updated method for biome spawning in corners and center
     void CreateBiomesWithIrregularShapes()
     {
-        List<Vector2Int> biomeCenters = new List<Vector2Int>();
-        int attempts = 0;
-        const int maxAttempts = 100;
-
-        while (biomeCenters.Count < biomeCount - 1 && attempts < maxAttempts * (biomeCount - 1))
+        // Ensure we have at least 4 biomes for the corners
+        if (biomeCount < 4)
         {
-            Vector2Int center = new Vector2Int(Random.Range(0, width), Random.Range(0, height));
+            Debug.LogWarning("At least 4 biomes are required to cover all corners.");
+            return;
+        }
 
-            if (!DoesOverlap(biomeCenters, center, biomeMaxDistance))
-            {
-                biomeCenters.Add(center);
-                CreateIrregularBiome(center, biomeCenters.Count - 1);
-            }
+        // Define the biome centers for each corner of the map
+        List<Vector2Int> biomeCenters = new List<Vector2Int>
+        {
+            new Vector2Int(biomeMaxDistance / 2, height - biomeMaxDistance / 2), // Top-left corner
+            new Vector2Int(width - biomeMaxDistance / 2, height - biomeMaxDistance / 2), // Top-right corner
+            new Vector2Int(biomeMaxDistance / 2, biomeMaxDistance / 2), // Bottom-left corner
+            new Vector2Int(width - biomeMaxDistance / 2, biomeMaxDistance / 2) // Bottom-right corner
+        };
 
-            attempts++;
+        // Generate the biomes in the four corners
+        for (int i = 0; i < 4; i++)
+        {
+            CreateIrregularBiome(biomeCenters[i], i);
+        }
+
+        // If there's a 5th biome, place it in the center of the map
+        if (biomeCount == 5)
+        {
+            Vector2Int centerBiomePosition = new Vector2Int(width / 2, height / 2);
+            CreateIrregularBiome(centerBiomePosition, 4); // 4 because it's the 5th biome (index starts at 0)
         }
     }
 
@@ -95,18 +107,23 @@ public class CaveGenerator : MonoBehaviour
             {
                 float distance = Vector2Int.Distance(center, new Vector2Int(x, y));
 
-                if (distance <= biomeMaxDistance)
-                {
-                    float noiseValue = Mathf.PerlinNoise((x + center.x) * noiseScale, (y + center.y) * noiseScale);
+                // Calculate noise value
+                float noiseValue = Mathf.PerlinNoise((x + center.x) * noiseScale, (y + center.y) * noiseScale);
 
-                    if (noiseValue > noiseThreshold * (distance / biomeMaxDistance))
-                    {
-                        caveTilemap.SetTile(new Vector3Int(x, y, 0), biomeFloorTiles[biomeIndex]);
-                    }
+                // Check if within the biome range and the noise value
+                if (distance <= biomeMaxDistance && noiseValue > noiseThreshold)
+                {
+                    caveTilemap.SetTile(new Vector3Int(x, y, 0), biomeFloorTiles[biomeIndex]);
+                }
+                // Optional: Fill more tiles near the center even if the distance is less
+                if (distance <= biomeMaxDistance * 0.5f && noiseValue > noiseThreshold * 0.5f)
+                {
+                    caveTilemap.SetTile(new Vector3Int(x, y, 0), biomeFloorTiles[biomeIndex]);
                 }
             }
         }
     }
+
 
     void FillEmptySpaceWithBiome()
     {
@@ -116,8 +133,14 @@ public class CaveGenerator : MonoBehaviour
             {
                 if (caveTilemap.GetTile(new Vector3Int(x, y, 0)) == null)
                 {
+                    // Check distance from the center of the map
+                    float distanceFromCenter = Vector2Int.Distance(new Vector2Int(x, y), new Vector2Int(width / 2, height / 2));
+
+                    // Modify noise generation based on distance from center
                     float noiseValue = Mathf.PerlinNoise(x * noiseScale, y * noiseScale);
-                    if (noiseValue > noiseThreshold)
+
+                    // Fill space only if far enough from center
+                    if (distanceFromCenter > biomeMaxDistance && noiseValue > noiseThreshold)
                     {
                         caveTilemap.SetTile(new Vector3Int(x, y, 0), biomeFloorTiles[biomeCount - 1]);
                     }
@@ -175,21 +198,14 @@ public class CaveGenerator : MonoBehaviour
     {
         for (int i = 0; i < count; i++)
         {
-            // Randomly choose a position to place the liquid
             Vector2Int liquidCenter = new Vector2Int(Random.Range(0, width), Random.Range(0, height));
 
-            // Check if the tile can be placed (it should be empty space)
             if (caveTilemap.GetTile(new Vector3Int(liquidCenter.x, liquidCenter.y, 0)) == null)
             {
-                // Decide whether to spawn the liquid based on liquidSpawnChance
                 if (Random.Range(0f, 100f) < liquidSpawnChance)
                 {
-                    // Set the first liquid tile as the source
                     liquidTilemap.SetTile(new Vector3Int(liquidCenter.x, liquidCenter.y, 0), liquidTile);
-                    // Make this tile a source by adding Rigidbody2D and BoxCollider2D
                     CreateLiquidTile(liquidCenter, liquidTile, true);
-
-                    // Spawn additional liquid tiles around the source
                     SpawnFallingLiquidTiles(liquidCenter, liquidTile);
                 }
             }
@@ -199,22 +215,14 @@ public class CaveGenerator : MonoBehaviour
     void SpawnFallingLiquidTiles(Vector2Int liquidCenter, TileBase liquidTile)
     {
         // Implement logic to spawn surrounding liquid tiles, if necessary
-        // This function should handle the logic of where to place additional liquid tiles
-        // based on the source position. For example, you can place tiles directly below,
-        // left, or right of the source.
     }
 
     void CreateLiquidTile(Vector2Int position, TileBase liquidTile, bool isSource)
     {
-        // Here, you would implement the logic to add any necessary components (e.g., Rigidbody2D)
-        // to the liquid tile for movement and physics.
-        // Example:
         GameObject liquidGameObject = new GameObject("Liquid");
         liquidGameObject.transform.position = new Vector3(position.x, position.y, 0);
         Rigidbody2D rb = liquidGameObject.AddComponent<Rigidbody2D>();
         rb.gravityScale = 0; // Adjust as necessary
         rb.velocity = new Vector2(0, -liquidMoveSpeed); // Adjust liquid movement
-
-        // Add other components as needed
     }
 }
