@@ -1,98 +1,220 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System.Collections.Generic;
 
 public class CaveGenerator : MonoBehaviour
 {
-    public Tilemap tilemap; // Reference to the Tilemap
-    public TileBase floorTile; // Reference to the Tile (Rule Tile or any TileBase)
-    public int width = 50; // Width of the tilemap
-    public int height = 50; // Height of the tilemap
-    public float fillProbability = 0.45f; // Initial fill probability
-    public int smoothingIterations = 5; // Number of smoothing iterations
+    [Header("Tilemap Settings")]
+    [SerializeField] private Tilemap caveTilemap; // Tilemap for caves
+    [SerializeField] private Tilemap liquidTilemap; // Tilemap for liquids (rule tiles)
 
-    private int[,] map;
+    [Header("Biome Tiles")]
+    [SerializeField] private TileBase[] biomeFloorTiles;
+
+    [Header("Liquid Tiles")]
+    [SerializeField] private TileBase waterTile; // Tile for water
+    [SerializeField] private TileBase lavaTile; // Tile for lava
+
+    [Header("Map Dimensions")]
+    [SerializeField] private int width = 100;
+    [SerializeField] private int height = 100;
+
+    [Header("Biome Settings")]
+    [SerializeField] private int biomeCount = 5;
+    [SerializeField] private int biomeMaxDistance = 30;
+
+    [Header("Noise Settings")]
+    [SerializeField] private float noiseScale = 0.1f;
+    [SerializeField] private float noiseThreshold = 0.5f;
+
+    [Header("Ore Settings")]
+    [SerializeField] private TileBase[] oreTiles;
+    [SerializeField] private float oreSpawnChance = 5f;
+    [SerializeField] private int minOreClusterSize = 3;
+    [SerializeField] private int maxOreClusterSize = 8;
+
+    // New parameters for liquid generation
+    [Header("Liquid Settings")]
+    [SerializeField] private int waterCount = 3; // Number of water bodies to generate
+    [SerializeField] private int lavaCount = 2; // Number of lava bodies to generate
+    [SerializeField] private float liquidSpawnChance = 20f; // Chance for liquids to spawn (percentage)
+    [SerializeField] private float liquidMoveSpeed = 0.5f; // Speed of liquid movement
 
     private void Start()
     {
         GenerateCave();
+        GenerateLiquids();
     }
 
     void GenerateCave()
     {
-        map = new int[width, height];
+        caveTilemap.ClearAllTiles();
+        CreateBiomesWithIrregularShapes();
+        FillEmptySpaceWithBiome();
+        GenerateOres();
+        Debug.Log("Cave with unique-shaped biomes and ores generated.");
+    }
 
-        // Randomly fill the map
+    void CreateBiomesWithIrregularShapes()
+    {
+        List<Vector2Int> biomeCenters = new List<Vector2Int>();
+        int attempts = 0;
+        const int maxAttempts = 100;
+
+        while (biomeCenters.Count < biomeCount - 1 && attempts < maxAttempts * (biomeCount - 1))
+        {
+            Vector2Int center = new Vector2Int(Random.Range(0, width), Random.Range(0, height));
+
+            if (!DoesOverlap(biomeCenters, center, biomeMaxDistance))
+            {
+                biomeCenters.Add(center);
+                CreateIrregularBiome(center, biomeCenters.Count - 1);
+            }
+
+            attempts++;
+        }
+    }
+
+    bool DoesOverlap(List<Vector2Int> biomeCenters, Vector2Int newCenter, int maxDistance)
+    {
+        foreach (var center in biomeCenters)
+        {
+            if (Vector2Int.Distance(center, newCenter) < maxDistance)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void CreateIrregularBiome(Vector2Int center, int biomeIndex)
+    {
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-                map[x, y] = Random.value < fillProbability ? 1 : 0; // 1 for wall, 0 for empty
-            }
-        }
+                float distance = Vector2Int.Distance(center, new Vector2Int(x, y));
 
-        // Smooth the map
-        for (int i = 0; i < smoothingIterations; i++)
-        {
-            map = SmoothMap(map);
-        }
-
-        // Populate the Tilemap with the final cave layout
-        PopulateTilemap();
-        Debug.Log("Cave generated.");
-    }
-
-    int[,] SmoothMap(int[,] oldMap)
-    {
-        int[,] newMap = new int[width, height];
-
-        for (int x = 0; x < width; x++)
-        {
-            for (int y = 0; y < height; y++)
-            {
-                int surroundingWalls = GetSurroundingWallCount(oldMap, x, y);
-                if (surroundingWalls > 4)
-                    newMap[x, y] = 1; // Wall
-                else if (surroundingWalls < 4)
-                    newMap[x, y] = 0; // Empty
-                else
-                    newMap[x, y] = oldMap[x, y]; // Preserve state
-            }
-        }
-
-        return newMap;
-    }
-
-    int GetSurroundingWallCount(int[,] map, int x, int y)
-    {
-        int wallCount = 0;
-
-        for (int nx = x - 1; nx <= x + 1; nx++)
-        {
-            for (int ny = y - 1; ny <= y + 1; ny++)
-            {
-                if (nx >= 0 && ny >= 0 && nx < width && ny < height)
+                if (distance <= biomeMaxDistance)
                 {
-                    if (nx == x && ny == y) continue; // Skip the current tile
-                    wallCount += map[nx, ny];
+                    float noiseValue = Mathf.PerlinNoise((x + center.x) * noiseScale, (y + center.y) * noiseScale);
+
+                    if (noiseValue > noiseThreshold * (distance / biomeMaxDistance))
+                    {
+                        caveTilemap.SetTile(new Vector3Int(x, y, 0), biomeFloorTiles[biomeIndex]);
+                    }
                 }
             }
         }
-
-        return wallCount;
     }
 
-    void PopulateTilemap()
+    void FillEmptySpaceWithBiome()
     {
-        tilemap.ClearAllTiles(); // Clear previous tiles before populating
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-                if (map[x, y] == 0) // 0 represents empty space
+                if (caveTilemap.GetTile(new Vector3Int(x, y, 0)) == null)
                 {
-                    tilemap.SetTile(new Vector3Int(x, y, 0), floorTile); // Set the tile
+                    float noiseValue = Mathf.PerlinNoise(x * noiseScale, y * noiseScale);
+                    if (noiseValue > noiseThreshold)
+                    {
+                        caveTilemap.SetTile(new Vector3Int(x, y, 0), biomeFloorTiles[biomeCount - 1]);
+                    }
                 }
             }
         }
+    }
+
+    void GenerateOres()
+    {
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                if (caveTilemap.GetTile(new Vector3Int(x, y, 0)) != null)
+                {
+                    if (Random.Range(0f, 100f) < oreSpawnChance)
+                    {
+                        Vector2Int oreClusterCenter = new Vector2Int(x, y);
+                        int clusterSize = Random.Range(minOreClusterSize, maxOreClusterSize);
+                        PlaceOreCluster(oreClusterCenter, clusterSize);
+                    }
+                }
+            }
+        }
+    }
+
+    void PlaceOreCluster(Vector2Int center, int size)
+    {
+        TileBase oreTile = oreTiles[Random.Range(0, oreTiles.Length)];
+        for (int i = 0; i < size; i++)
+        {
+            int offsetX = Random.Range(-2, 3);
+            int offsetY = Random.Range(-2, 3);
+            Vector2Int orePosition = new Vector2Int(center.x + offsetX, center.y + offsetY);
+
+            if (orePosition.x >= 0 && orePosition.x < width && orePosition.y >= 0 && orePosition.y < height)
+            {
+                if (caveTilemap.GetTile(new Vector3Int(orePosition.x, orePosition.y, 0)) != null)
+                {
+                    caveTilemap.SetTile(new Vector3Int(orePosition.x, orePosition.y, 0), oreTile);
+                }
+            }
+        }
+    }
+
+    void GenerateLiquids()
+    {
+        Debug.Log("Generating Liquids");
+        GenerateLiquid(waterTile, waterCount);
+        GenerateLiquid(lavaTile, lavaCount);
+    }
+
+    void GenerateLiquid(TileBase liquidTile, int count)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            // Randomly choose a position to place the liquid
+            Vector2Int liquidCenter = new Vector2Int(Random.Range(0, width), Random.Range(0, height));
+
+            // Check if the tile can be placed (it should be empty space)
+            if (caveTilemap.GetTile(new Vector3Int(liquidCenter.x, liquidCenter.y, 0)) == null)
+            {
+                // Decide whether to spawn the liquid based on liquidSpawnChance
+                if (Random.Range(0f, 100f) < liquidSpawnChance)
+                {
+                    // Set the first liquid tile as the source
+                    liquidTilemap.SetTile(new Vector3Int(liquidCenter.x, liquidCenter.y, 0), liquidTile);
+                    // Make this tile a source by adding Rigidbody2D and BoxCollider2D
+                    CreateLiquidTile(liquidCenter, liquidTile, true);
+
+                    // Spawn additional liquid tiles around the source
+                    SpawnFallingLiquidTiles(liquidCenter, liquidTile);
+                }
+            }
+        }
+    }
+
+    void SpawnFallingLiquidTiles(Vector2Int liquidCenter, TileBase liquidTile)
+    {
+        // Implement logic to spawn surrounding liquid tiles, if necessary
+        // This function should handle the logic of where to place additional liquid tiles
+        // based on the source position. For example, you can place tiles directly below,
+        // left, or right of the source.
+    }
+
+    void CreateLiquidTile(Vector2Int position, TileBase liquidTile, bool isSource)
+    {
+        // Here, you would implement the logic to add any necessary components (e.g., Rigidbody2D)
+        // to the liquid tile for movement and physics.
+        // Example:
+        GameObject liquidGameObject = new GameObject("Liquid");
+        liquidGameObject.transform.position = new Vector3(position.x, position.y, 0);
+        Rigidbody2D rb = liquidGameObject.AddComponent<Rigidbody2D>();
+        rb.gravityScale = 0; // Adjust as necessary
+        rb.velocity = new Vector2(0, -liquidMoveSpeed); // Adjust liquid movement
+
+        // Add other components as needed
     }
 }
