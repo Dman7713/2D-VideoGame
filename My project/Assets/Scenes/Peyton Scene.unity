@@ -212,7 +212,7 @@ MonoBehaviour:
   biomeCount: 5
   biomeMaxDistance: 200
   noiseScale: 0.1
-  noiseThreshold: 0.52
+  noiseThreshold: 0.57
   oreTiles:
   - {fileID: 11400000, guid: c09beedc8bdb49643af97598fec90704, type: 2}
   oreSpawnChance: 1
