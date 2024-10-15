@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d1514134bc4fbd41bb739b1b9a49231, type: 3}
   m_Name: Iron
   m_EditorClassIdentifier: 
-  m_DefaultSprite: {fileID: 315770470, guid: f9164d2bd46c1c14ab840dc0fce47367, type: 3}
+  m_DefaultSprite: {fileID: -1693698379, guid: 9543cdfb9b572c2409ad1ea5f8b68583, type: 3}
   m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 1
   m_TilingRules:
   - m_Id: 0
     m_Sprites:
-    - {fileID: 315770470, guid: f9164d2bd46c1c14ab840dc0fce47367, type: 3}
+    - {fileID: -1693698379, guid: 9543cdfb9b572c2409ad1ea5f8b68583, type: 3}
     m_GameObject: {fileID: 0}
     m_MinAnimationSpeed: 1
     m_MaxAnimationSpeed: 1
