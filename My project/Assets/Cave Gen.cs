@@ -54,17 +54,14 @@ public class CaveGenerator : MonoBehaviour
         Debug.Log("Cave with unique-shaped biomes and ores generated.");
     }
 
-    // Updated method for biome spawning in corners and center
     void CreateBiomesWithIrregularShapes()
     {
-        // Ensure we have at least 4 biomes for the corners
         if (biomeCount < 4)
         {
             Debug.LogWarning("At least 4 biomes are required to cover all corners.");
             return;
         }
 
-        // Define the biome centers for each corner of the map
         List<Vector2Int> biomeCenters = new List<Vector2Int>
         {
             new Vector2Int(biomeMaxDistance / 2, height - biomeMaxDistance / 2), // Top-left corner
@@ -73,30 +70,34 @@ public class CaveGenerator : MonoBehaviour
             new Vector2Int(width - biomeMaxDistance / 2, biomeMaxDistance / 2) // Bottom-right corner
         };
 
-        // Generate the biomes in the four corners
         for (int i = 0; i < 4; i++)
         {
             CreateIrregularBiome(biomeCenters[i], i);
         }
 
-        // If there's a 5th biome, place it in the center of the map
-        if (biomeCount == 5)
+        if (biomeCount >= 5)
         {
             Vector2Int centerBiomePosition = new Vector2Int(width / 2, height / 2);
-            CreateIrregularBiome(centerBiomePosition, 4); // 4 because it's the 5th biome (index starts at 0)
+            CreateIrregularBiome(centerBiomePosition, 4);
+        }
+
+        for (int i = 5; i < biomeCount; i++)
+        {
+            Vector2Int randomBiomePosition;
+            do
+            {
+                randomBiomePosition = new Vector2Int(Random.Range(0, width), Random.Range(0, height));
+            } while (IsNearCorner(randomBiomePosition));
+
+            CreateIrregularBiome(randomBiomePosition, i);
         }
     }
 
-    bool DoesOverlap(List<Vector2Int> biomeCenters, Vector2Int newCenter, int maxDistance)
+    bool IsNearCorner(Vector2Int position)
     {
-        foreach (var center in biomeCenters)
-        {
-            if (Vector2Int.Distance(center, newCenter) < maxDistance)
-            {
-                return true;
-            }
-        }
-        return false;
+        int cornerDistance = 10; // distance threshold to consider as a corner
+        return (position.x < cornerDistance || position.x > width - cornerDistance) &&
+               (position.y < cornerDistance || position.y > height - cornerDistance);
     }
 
     void CreateIrregularBiome(Vector2Int center, int biomeIndex)
@@ -105,25 +106,19 @@ public class CaveGenerator : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             {
+                // Calculate distance from the center
                 float distance = Vector2Int.Distance(center, new Vector2Int(x, y));
-
-                // Calculate noise value
+                // Create an irregular shape using Perlin noise
                 float noiseValue = Mathf.PerlinNoise((x + center.x) * noiseScale, (y + center.y) * noiseScale);
 
-                // Check if within the biome range and the noise value
+                // Use both distance and noise to create a more organic shape
                 if (distance <= biomeMaxDistance && noiseValue > noiseThreshold)
-                {
-                    caveTilemap.SetTile(new Vector3Int(x, y, 0), biomeFloorTiles[biomeIndex]);
-                }
-                // Optional: Fill more tiles near the center even if the distance is less
-                if (distance <= biomeMaxDistance * 0.5f && noiseValue > noiseThreshold * 0.5f)
                 {
                     caveTilemap.SetTile(new Vector3Int(x, y, 0), biomeFloorTiles[biomeIndex]);
                 }
             }
         }
     }
-
 
     void FillEmptySpaceWithBiome()
     {
@@ -133,13 +128,9 @@ public class CaveGenerator : MonoBehaviour
             {
                 if (caveTilemap.GetTile(new Vector3Int(x, y, 0)) == null)
                 {
-                    // Check distance from the center of the map
                     float distanceFromCenter = Vector2Int.Distance(new Vector2Int(x, y), new Vector2Int(width / 2, height / 2));
-
-                    // Modify noise generation based on distance from center
                     float noiseValue = Mathf.PerlinNoise(x * noiseScale, y * noiseScale);
 
-                    // Fill space only if far enough from center
                     if (distanceFromCenter > biomeMaxDistance && noiseValue > noiseThreshold)
                     {
                         caveTilemap.SetTile(new Vector3Int(x, y, 0), biomeFloorTiles[biomeCount - 1]);
@@ -214,15 +205,14 @@ public class CaveGenerator : MonoBehaviour
 
     void SpawnFallingLiquidTiles(Vector2Int liquidCenter, TileBase liquidTile)
     {
-        // Implement logic to spawn surrounding liquid tiles, if necessary
+        // Add logic for falling liquid tile behavior if needed
     }
 
     void CreateLiquidTile(Vector2Int position, TileBase liquidTile, bool isSource)
     {
         GameObject liquidGameObject = new GameObject("Liquid");
         liquidGameObject.transform.position = new Vector3(position.x, position.y, 0);
-        Rigidbody2D rb = liquidGameObject.AddComponent<Rigidbody2D>();
-        rb.gravityScale = 0; // Adjust as necessary
-        rb.velocity = new Vector2(0, -liquidMoveSpeed); // Adjust liquid movement
+
+        // Add additional liquid behavior as needed (e.g., Rigidbody2D for physics, flow mechanics)
     }
 }

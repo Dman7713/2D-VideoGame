@@ -205,6 +205,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6ecb88f9dff88c540acf434d76039421, type: 2}
   - {fileID: 11400000, guid: 44d668a3c95df2143856fdc3202a2ece, type: 2}
   - {fileID: 11400000, guid: 70959a56f6806924e9b865c4cd7415c5, type: 2}
+  - {fileID: 11400000, guid: eb2419ec40f9f004ba22af3e9d07f725, type: 2}
+  - {fileID: 11400000, guid: affb330b493431b4da648a0aa7741e3b, type: 2}
+  - {fileID: 11400000, guid: affb330b493431b4da648a0aa7741e3b, type: 2}
+  - {fileID: 11400000, guid: 6bb64688eda1f8344878b894e42d6dc3, type: 2}
+  - {fileID: 11400000, guid: 9d609b6956dc83049910c73d57d1d4cd, type: 2}
   waterTile: {fileID: 11400000, guid: 6f04a0fefd06b064380c8816a6259d2f, type: 2}
   lavaTile: {fileID: 11400000, guid: 48af082b292ebfc458cc2cd211ceb632, type: 2}
   width: 800
@@ -212,7 +217,7 @@ MonoBehaviour:
   biomeCount: 5
   biomeMaxDistance: 300
   noiseScale: 0.05
-  noiseThreshold: 0.55
+  noiseThreshold: 0.45
   oreTiles:
   - {fileID: 11400000, guid: c09beedc8bdb49643af97598fec90704, type: 2}
   oreSpawnChance: 0.4
@@ -479,7 +484,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 12.608699
+  orthographic size: 22.547161
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -674,6 +679,74 @@ MonoBehaviour:
   - {x: 0.5, y: -0.5, z: 0}
   - {x: 0.5, y: 0.5, z: 0}
   - {x: -0.5, y: 0.5, z: 0}
+--- !u!1 &1422201933
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1422201936}
+  - component: {fileID: 1422201935}
+  - component: {fileID: 1422201934}
+  m_Layer: 0
+  m_Name: EventSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1422201934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1422201933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
+  m_HorizontalAxis: Horizontal
+  m_VerticalAxis: Vertical
+  m_SubmitButton: Submit
+  m_CancelButton: Cancel
+  m_InputActionsPerSecond: 10
+  m_RepeatDelay: 0.5
+  m_ForceModuleActive: 0
+--- !u!114 &1422201935
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1422201933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_FirstSelected: {fileID: 0}
+  m_sendNavigationEvents: 1
+  m_DragThreshold: 10
+--- !u!4 &1422201936
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1422201933}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1809503401
 GameObject:
   m_ObjectHideFlags: 0
@@ -1306,3 +1379,4 @@ SceneRoots:
   - {fileID: 1840670820}
   - {fileID: 129092403}
   - {fileID: 115495153}
+  - {fileID: 1422201936}
