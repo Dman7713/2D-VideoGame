@@ -46,6 +46,7 @@ public class PlatformerMovement : MonoBehaviour
     {
         if (collision.gameObject.layer == 6)
         {
+            timer = 0;
             grounded = true;
             canJump = true;
         }
