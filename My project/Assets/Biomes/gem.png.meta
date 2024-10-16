@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: ee331e7aa579950409e29988a885b4b8
+guid: c7c8f6c24fdd3024ab8546bdc0fca4ef
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -97,11 +97,11 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: tileset_lava_0
+      name: gem_0
       rect:
         serializedVersion: 2
-        x: 32
-        y: 96
+        x: 0
+        y: 80
         width: 16
         height: 16
       alignment: 0
@@ -111,18 +111,18 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1bada22e1df9c5444b6fcf70dcd4cda8
-      internalID: -1222430043
+      spriteID: e62ca7880cf69fc4bb2544767b4f53d7
+      internalID: 1614620054
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_lava_1
+      name: gem_1
       rect:
         serializedVersion: 2
-        x: 64
-        y: 96
+        x: 16
+        y: 80
         width: 16
         height: 16
       alignment: 0
@@ -132,14 +132,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1d165c21d2c193f4b8ff516dc873c610
-      internalID: -594987341
+      spriteID: 6df629376017198479f5a3b27edd4028
+      internalID: -1176170556
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_lava_2
+      name: gem_2
       rect:
         serializedVersion: 2
         x: 32
@@ -153,14 +153,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ed6cd300fba47e84f8ddfed4aebb8f09
-      internalID: 276444488
+      spriteID: 9c4eb68e9375f234799ab371b804fab4
+      internalID: 243274500
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_lava_3
+      name: gem_3
       rect:
         serializedVersion: 2
         x: 48
@@ -174,14 +174,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c07d7229548dfca4ebdb398769c70713
-      internalID: 1177291753
+      spriteID: c5527d3b73e78984d8e5e90c61509f01
+      internalID: 684014012
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_lava_4
+      name: gem_4
       rect:
         serializedVersion: 2
         x: 64
@@ -195,14 +195,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 546f29e472abb3c4db66e67b8cc9a569
-      internalID: -593610881
+      spriteID: 0d9fd8393bdcc104e94d53f19edc345e
+      internalID: 2049843564
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_lava_5
+      name: gem_5
       rect:
         serializedVersion: 2
         x: 80
@@ -216,18 +216,18 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 208e578644fb3844cb49ae4684f10d43
-      internalID: -1944930950
+      spriteID: f5a4b3c8fe4931144873f3d41fdb1cba
+      internalID: 1939708569
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_lava_6
+      name: gem_6
       rect:
         serializedVersion: 2
-        x: 96
-        y: 80
+        x: 0
+        y: 64
         width: 16
         height: 16
       alignment: 0
@@ -237,119 +237,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3e8de39a1bbacc34699bb1e0fedd2caa
-      internalID: -1973259929
+      spriteID: 4739a97150cf52b40b355c586369f9ed
+      internalID: 207516431
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_lava_7
-      rect:
-        serializedVersion: 2
-        x: 112
-        y: 80
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ecf2ec3d79a4912439762d1dcfa4381d
-      internalID: -2136776550
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tileset_lava_8
-      rect:
-        serializedVersion: 2
-        x: 144
-        y: 80
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: be36079ae5610604da06cff92a79c545
-      internalID: 1843695538
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tileset_lava_9
-      rect:
-        serializedVersion: 2
-        x: 176
-        y: 80
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 07b4be47af1b11247a075e275c981499
-      internalID: 916210276
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tileset_lava_10
-      rect:
-        serializedVersion: 2
-        x: 192
-        y: 80
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: e8ef20a09f61c3d43ab5c7c51e0f477c
-      internalID: -460566847
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tileset_lava_11
-      rect:
-        serializedVersion: 2
-        x: 208
-        y: 80
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: bb9bd4399816d6b4e97274a2c2d10cb3
-      internalID: 622653388
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tileset_lava_12
+      name: gem_7
       rect:
         serializedVersion: 2
         x: 16
@@ -363,14 +258,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 78d31dad1f2d56748b2e8e6cefe67854
-      internalID: 699609004
+      spriteID: 3eca358252a39a242a933d77b8e1f616
+      internalID: -867231053
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_lava_13
+      name: gem_8
       rect:
         serializedVersion: 2
         x: 32
@@ -384,14 +279,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 140ac9eb16b74d44e8c34728fb995bfe
-      internalID: 737706805
+      spriteID: 265ec2b523594cc4bb8837938160552b
+      internalID: 1820485871
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_lava_14
+      name: gem_9
       rect:
         serializedVersion: 2
         x: 48
@@ -405,14 +300,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d6f53e515af8ef74f88c32e56a05d7b7
-      internalID: -957926223
+      spriteID: 7e399950353589644bf380e9fac0928e
+      internalID: -1585200541
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_lava_15
+      name: gem_10
       rect:
         serializedVersion: 2
         x: 64
@@ -426,14 +321,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 150ccb3d2d615204ea314a5ecc100443
-      internalID: -685754875
+      spriteID: 39717d18d6a0b314fa0aec578d23fe74
+      internalID: -816191231
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_lava_16
+      name: gem_11
       rect:
         serializedVersion: 2
         x: 80
@@ -447,14 +342,35 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 89e421229153ccf46a6666df3b6d778f
-      internalID: 987915964
+      spriteID: dc87f317fbb26f4468b9ad8a449e91e4
+      internalID: 255989692
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_lava_17
+      name: gem_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 48
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9f83b47322efa554b86962b1da66b622
+      internalID: 1914225341
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gem_13
       rect:
         serializedVersion: 2
         x: 16
@@ -468,14 +384,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c9a98de5860c67345b69cf5d1b3cb3d0
-      internalID: -1814896324
+      spriteID: a854afef3f4eff14eb3b95bd1815f07d
+      internalID: 358082086
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_lava_18
+      name: gem_14
       rect:
         serializedVersion: 2
         x: 32
@@ -489,14 +405,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6f6b04289fcadcf438ccc3e106df5c0a
-      internalID: -381828200
+      spriteID: dc6483f227c46bf40bf5c91fe2635472
+      internalID: 370425997
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_lava_19
+      name: gem_15
       rect:
         serializedVersion: 2
         x: 48
@@ -510,14 +426,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 215a3ad26c49c22438d65453c86a69c8
-      internalID: -621104193
+      spriteID: c09f9440caa1fa642a114d5986daea3e
+      internalID: 873001666
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_lava_20
+      name: gem_16
       rect:
         serializedVersion: 2
         x: 64
@@ -531,14 +447,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c92ddcf6220fe0d41a889bb657f80972
-      internalID: -1533332450
+      spriteID: f21a7d1d6398e4546a1ed0c4a785bbc1
+      internalID: 208360049
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_lava_21
+      name: gem_17
       rect:
         serializedVersion: 2
         x: 80
@@ -552,18 +468,18 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: eee2e1754574036448f027ce87809bd8
-      internalID: -620124866
+      spriteID: b0456758f849be04286decb76d3197be
+      internalID: 352032716
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_lava_22
+      name: gem_18
       rect:
         serializedVersion: 2
-        x: 112
-        y: 48
+        x: 0
+        y: 32
         width: 16
         height: 16
       alignment: 0
@@ -573,140 +489,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c9ad86b2df2cc5d4f8bcb1f66a8873c6
-      internalID: -1577940724
+      spriteID: 09644750dfc7c734e952b6c55b5c7b57
+      internalID: 1150151902
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_lava_23
-      rect:
-        serializedVersion: 2
-        x: 128
-        y: 48
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: e82f6da2373cb724685a2335d20d7cdf
-      internalID: -402540938
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tileset_lava_24
-      rect:
-        serializedVersion: 2
-        x: 144
-        y: 48
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 341a07952617a34499840dad4fe57016
-      internalID: -1345218804
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tileset_lava_25
-      rect:
-        serializedVersion: 2
-        x: 160
-        y: 48
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9328e23fc4888af4984ffbbfef39476f
-      internalID: 929955730
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tileset_lava_26
-      rect:
-        serializedVersion: 2
-        x: 176
-        y: 48
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 8270bd6293a46bf4c80098db79cce773
-      internalID: 1885930922
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tileset_lava_27
-      rect:
-        serializedVersion: 2
-        x: 192
-        y: 48
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: e1c42131badafb64daa22cd51f8685d9
-      internalID: 15767013
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tileset_lava_28
-      rect:
-        serializedVersion: 2
-        x: 208
-        y: 48
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: e9abe6688e9dc02498cec75ea739a0d5
-      internalID: -189815063
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tileset_lava_29
+      name: gem_19
       rect:
         serializedVersion: 2
         x: 16
@@ -720,14 +510,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 049590098fdccc345bb919098055ec46
-      internalID: -131971711
+      spriteID: 680544fcc8276e34db2f016edca26131
+      internalID: -1449806346
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_lava_30
+      name: gem_20
       rect:
         serializedVersion: 2
         x: 32
@@ -741,14 +531,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7be19709a9b53944abf350c5a7621138
-      internalID: 1207577089
+      spriteID: 1d357285383920c4aa5e4eec5a1feee1
+      internalID: -1172114663
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_lava_31
+      name: gem_21
       rect:
         serializedVersion: 2
         x: 48
@@ -762,14 +552,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 010268642008d8f4d9e92c4997d8e428
-      internalID: 493220146
+      spriteID: c9e0c28ed93f0e74c8e0abfcdfebcfc4
+      internalID: 1572590976
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_lava_32
+      name: gem_22
       rect:
         serializedVersion: 2
         x: 64
@@ -783,14 +573,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 641affafc782ef5439a273bc09775c8a
-      internalID: 1378836757
+      spriteID: e4eda21999b68774e9f4bed8a0e2c206
+      internalID: -67895021
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_lava_33
+      name: gem_23
       rect:
         serializedVersion: 2
         x: 80
@@ -804,122 +594,17 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4a3174299c025f44382a211548da05c3
-      internalID: 549002294
+      spriteID: 2a44d7617a8b3794e99b60ee390abcce
+      internalID: -1200356952
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_lava_34
+      name: gem_24
       rect:
         serializedVersion: 2
-        x: 128
-        y: 32
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 3c3c3709940bc464292dfa77ed9a129f
-      internalID: 1269024810
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tileset_lava_35
-      rect:
-        serializedVersion: 2
-        x: 144
-        y: 32
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 2b7f53a05e797d7418ccd8909dbd4d5f
-      internalID: 729745763
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tileset_lava_36
-      rect:
-        serializedVersion: 2
-        x: 160
-        y: 32
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: e3f2a63878c731c46ab8ae99df53a3fc
-      internalID: -1502168590
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tileset_lava_37
-      rect:
-        serializedVersion: 2
-        x: 176
-        y: 32
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 3d1d1d35cbe88344aa50b24eceea337c
-      internalID: -1976407155
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tileset_lava_38
-      rect:
-        serializedVersion: 2
-        x: 192
-        y: 32
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c56a3996de75cfd49a90c75651340611
-      internalID: 182201857
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tileset_lava_39
-      rect:
-        serializedVersion: 2
-        x: 144
+        x: 0
         y: 16
         width: 16
         height: 16
@@ -930,17 +615,17 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6c12b2d5ff93d0e42805f60d60190350
-      internalID: 210178741
+      spriteID: 0dd518d689e2980499da71dcbb26f6d6
+      internalID: -663009530
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_lava_40
+      name: gem_25
       rect:
         serializedVersion: 2
-        x: 160
+        x: 16
         y: 16
         width: 16
         height: 16
@@ -951,17 +636,17 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 37e76fd2219d305439498fdd20668158
-      internalID: -1084393368
+      spriteID: 1261d8ca4299dc8409ec74f64cfe1876
+      internalID: -2056440731
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_lava_41
+      name: gem_26
       rect:
         serializedVersion: 2
-        x: 176
+        x: 32
         y: 16
         width: 16
         height: 16
@@ -972,8 +657,155 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 03b10fc2b387be94fbbba5eebae0378d
-      internalID: -1480255333
+      spriteID: c93fa5001c5a3434ea3cf55b80082798
+      internalID: 1155778739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gem_27
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9a62600a154294345bf774b2b622ab21
+      internalID: -882123994
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gem_28
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6dd8ad98354827b409c3fa8321a7ac26
+      internalID: 1140518007
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gem_29
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d2449d49d9131684d88db042a4a9d850
+      internalID: 251911167
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gem_30
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dfee2f55f0d43b94d817cb82c4b0d3d5
+      internalID: -1715455109
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gem_31
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 560e95ddf095d36469b4c90af4b3ac0d
+      internalID: -550797553
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gem_32
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f90823697f3fcb247a0741ecd4fbd37b
+      internalID: -405836070
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gem_33
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: de66fcaa340b02b4cae8cfe41ae2c1e7
+      internalID: 1053795255
       vertices: []
       indices: 
       edges: []
@@ -989,48 +821,40 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      tileset_lava_0: -1222430043
-      tileset_lava_1: -594987341
-      tileset_lava_10: -460566847
-      tileset_lava_11: 622653388
-      tileset_lava_12: 699609004
-      tileset_lava_13: 737706805
-      tileset_lava_14: -957926223
-      tileset_lava_15: -685754875
-      tileset_lava_16: 987915964
-      tileset_lava_17: -1814896324
-      tileset_lava_18: -381828200
-      tileset_lava_19: -621104193
-      tileset_lava_2: 276444488
-      tileset_lava_20: -1533332450
-      tileset_lava_21: -620124866
-      tileset_lava_22: -1577940724
-      tileset_lava_23: -402540938
-      tileset_lava_24: -1345218804
-      tileset_lava_25: 929955730
-      tileset_lava_26: 1885930922
-      tileset_lava_27: 15767013
-      tileset_lava_28: -189815063
-      tileset_lava_29: -131971711
-      tileset_lava_3: 1177291753
-      tileset_lava_30: 1207577089
-      tileset_lava_31: 493220146
-      tileset_lava_32: 1378836757
-      tileset_lava_33: 549002294
-      tileset_lava_34: 1269024810
-      tileset_lava_35: 729745763
-      tileset_lava_36: -1502168590
-      tileset_lava_37: -1976407155
-      tileset_lava_38: 182201857
-      tileset_lava_39: 210178741
-      tileset_lava_4: -593610881
-      tileset_lava_40: -1084393368
-      tileset_lava_41: -1480255333
-      tileset_lava_5: -1944930950
-      tileset_lava_6: -1973259929
-      tileset_lava_7: -2136776550
-      tileset_lava_8: 1843695538
-      tileset_lava_9: 916210276
+      gem_0: 1614620054
+      gem_1: -1176170556
+      gem_10: -816191231
+      gem_11: 255989692
+      gem_12: 1914225341
+      gem_13: 358082086
+      gem_14: 370425997
+      gem_15: 873001666
+      gem_16: 208360049
+      gem_17: 352032716
+      gem_18: 1150151902
+      gem_19: -1449806346
+      gem_2: 243274500
+      gem_20: -1172114663
+      gem_21: 1572590976
+      gem_22: -67895021
+      gem_23: -1200356952
+      gem_24: -663009530
+      gem_25: -2056440731
+      gem_26: 1155778739
+      gem_27: -882123994
+      gem_28: 1140518007
+      gem_29: 251911167
+      gem_3: 684014012
+      gem_30: -1715455109
+      gem_31: -550797553
+      gem_32: -405836070
+      gem_33: 1053795255
+      gem_4: 2049843564
+      gem_5: 1939708569
+      gem_6: 207516431
+      gem_7: -867231053
+      gem_8: 1820485871
+      gem_9: -1585200541
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
