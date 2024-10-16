@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Pickaxe
   m_EditorClassIdentifier: 
   tile: {fileID: 0}
-  type: 0
-  actionType: 0
+  type: 1
+  actionType: 1
   range: {x: 5, y: 4}
-  stackable: 1
-  image: {fileID: 0}
+  stackable: 0
+  image: {fileID: -228142220, guid: 61c8c617fecf5cb45b848605c0c73874, type: 3}
