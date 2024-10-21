@@ -1,103 +1,99 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using System.Collections.Generic;
 
 public class CaveGenerator : MonoBehaviour
 {
     [Header("Tilemap Settings")]
-    [SerializeField] private Tilemap caveTilemap; // Tilemap for caves
-    [SerializeField] private Tilemap liquidTilemap; // Tilemap for liquids (rule tiles)
+    [SerializeField] private Tilemap caveTilemap;
 
     [Header("Biome Tiles")]
-    [SerializeField] private TileBase[] biomeFloorTiles;
+    [SerializeField] private TileBase[] biomeFloorTiles; // Biome tiles (1-4) + Stone (5)
 
-    [Header("Liquid Tiles")]
-    [SerializeField] private TileBase waterTile; // Tile for water
-    [SerializeField] private TileBase lavaTile; // Tile for lava
+    [Header("Overlay Prefabs")]
+    [SerializeField] private GameObject[] biomeOverlayPrefabs; // Overlay prefabs for each biome
 
     [Header("Map Dimensions")]
-    [SerializeField] private int width = 100;
-    [SerializeField] private int height = 100;
+    [SerializeField] private int width = 100, height = 100;
 
     [Header("Biome Settings")]
-    [SerializeField] private int biomeCount = 5;
-    [SerializeField] private int biomeMaxDistance = 30;
-
-    [Header("Noise Settings")]
-    [SerializeField] private float noiseScale = 0.1f;
-    [SerializeField] private float noiseThreshold = 0.5f;
+    [SerializeField] private int biomeCount = 5; // Total biomes including stone
+    [SerializeField] private float biomeRadius = 30f; // Radius for each biome
+    [SerializeField] private float noiseScale = 0.1f, noiseThreshold = 0.5f; // For biome generation
+    [SerializeField] private float stoneNoiseScale = 0.1f; // For stone biome cave noise
+    [SerializeField] private float stoneNoiseThreshold = 0.5f; // For stone biome cave noise
 
     [Header("Ore Settings")]
     [SerializeField] private TileBase[] oreTiles;
     [SerializeField] private float oreSpawnChance = 5f;
-    [SerializeField] private int minOreClusterSize = 3;
-    [SerializeField] private int maxOreClusterSize = 8;
+    [SerializeField] private int minOreClusterSize = 3, maxOreClusterSize = 8;
 
-    [Header("Liquid Settings")]
-    [SerializeField] private int waterCount = 3; // Number of water bodies to generate
-    [SerializeField] private int lavaCount = 2; // Number of lava bodies to generate
-    [SerializeField] private float liquidSpawnChance = 20f; // Chance for liquids to spawn (percentage)
-    [SerializeField] private float liquidMoveSpeed = 0.5f; // Speed of liquid movement
+    [Header("Camera Settings")]
+    [SerializeField] private Camera mainCamera; // Reference to the camera
+    [SerializeField] private Transform player;  // Player reference to track position
+
+    private Dictionary<int, Vector2Int> biomeCenters = new Dictionary<int, Vector2Int>(); // Biome centers
+    private GameObject activeOverlay; // To track the current active overlay
+    private int currentBiome = -1; // To track the current biome index
 
     private void Start()
     {
         GenerateCave();
-        GenerateLiquids();
+    }
+
+    private void Update()
+    {
+        UpdateOverlayBasedOnBiome();
     }
 
     void GenerateCave()
     {
         caveTilemap.ClearAllTiles();
-        CreateBiomesWithIrregularShapes();
-        FillEmptySpaceWithBiome();
-        GenerateOres();
+        biomeCenters.Clear(); // Clear previous biome center data
+
+        CreateBiomes();           // Create biomes in corners
+        RemoveStoneInBiomes();    // Remove stone tiles in the radius of biomes 1-4
+        FillGapsWithStone();      // Fill the gaps with the stone biome (Biome 5)
+        GenerateOres();           // Generate ores in the cave
         Debug.Log("Cave with unique-shaped biomes and ores generated.");
     }
 
-    void CreateBiomesWithIrregularShapes()
+    void CreateBiomes()
     {
-        if (biomeCount < 4)
+        Vector2Int[] biomePositions = new Vector2Int[]
         {
-            Debug.LogWarning("At least 4 biomes are required to cover all corners.");
-            return;
-        }
-
-        List<Vector2Int> biomeCenters = new List<Vector2Int>
-        {
-            new Vector2Int(biomeMaxDistance / 2, height - biomeMaxDistance / 2), // Top-left corner
-            new Vector2Int(width - biomeMaxDistance / 2, height - biomeMaxDistance / 2), // Top-right corner
-            new Vector2Int(biomeMaxDistance / 2, biomeMaxDistance / 2), // Bottom-left corner
-            new Vector2Int(width - biomeMaxDistance / 2, biomeMaxDistance / 2) // Bottom-right corner
+            new Vector2Int(0, height - 1),      // Top-left corner (Biome 1)
+            new Vector2Int(width - 1, height - 1), // Top-right corner (Biome 2)
+            new Vector2Int(0, 0),               // Bottom-left corner (Biome 3)
+            new Vector2Int(width - 1, 0)        // Bottom-right corner (Biome 4)
         };
 
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < biomePositions.Length; i++)
         {
-            CreateIrregularBiome(biomeCenters[i], i);
-        }
+            Vector2Int biomePosition = biomePositions[i];
 
-        if (biomeCount >= 5)
-        {
-            Vector2Int centerBiomePosition = new Vector2Int(width / 2, height / 2);
-            CreateIrregularBiome(centerBiomePosition, 4);
-        }
-
-        for (int i = 5; i < biomeCount; i++)
-        {
-            Vector2Int randomBiomePosition;
-            do
+            if (IsBiomePositionValid(biomePosition, biomeRadius))
             {
-                randomBiomePosition = new Vector2Int(Random.Range(0, width), Random.Range(0, height));
-            } while (IsNearCorner(randomBiomePosition));
-
-            CreateIrregularBiome(randomBiomePosition, i);
+                biomeCenters[i] = biomePosition;
+                CreateIrregularBiome(biomePosition, i);
+            }
+            else
+            {
+                Debug.LogWarning($"Biome {i} at position {biomePosition} overlaps with existing biomes.");
+            }
         }
     }
 
-    bool IsNearCorner(Vector2Int position)
+    bool IsBiomePositionValid(Vector2Int position, float radius)
     {
-        int cornerDistance = 10; // distance threshold to consider as a corner
-        return (position.x < cornerDistance || position.x > width - cornerDistance) &&
-               (position.y < cornerDistance || position.y > height - cornerDistance);
+        foreach (var biomeCenter in biomeCenters.Values)
+        {
+            if (Vector2Int.Distance(position, biomeCenter) < radius)
+            {
+                return false; // Overlap detected
+            }
+        }
+        return true; // No overlap
     }
 
     void CreateIrregularBiome(Vector2Int center, int biomeIndex)
@@ -106,13 +102,9 @@ public class CaveGenerator : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             {
-                // Calculate distance from the center
-                float distance = Vector2Int.Distance(center, new Vector2Int(x, y));
-                // Create an irregular shape using Perlin noise
-                float noiseValue = Mathf.PerlinNoise((x + center.x) * noiseScale, (y + center.y) * noiseScale);
-
-                // Use both distance and noise to create a more organic shape
-                if (distance <= biomeMaxDistance && noiseValue > noiseThreshold)
+                float distanceToCenter = Vector2Int.Distance(center, new Vector2Int(x, y));
+                if (distanceToCenter <= biomeRadius &&
+                    Mathf.PerlinNoise((x + center.x) * noiseScale, (y + center.y) * noiseScale) > noiseThreshold)
                 {
                     caveTilemap.SetTile(new Vector3Int(x, y, 0), biomeFloorTiles[biomeIndex]);
                 }
@@ -120,24 +112,58 @@ public class CaveGenerator : MonoBehaviour
         }
     }
 
-    void FillEmptySpaceWithBiome()
+    void RemoveStoneInBiomes()
+    {
+        foreach (var biomeCenter in biomeCenters)
+        {
+            Vector2Int center = biomeCenter.Value;
+
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    if (Vector2Int.Distance(center, new Vector2Int(x, y)) < biomeRadius)
+                    {
+                        if (caveTilemap.GetTile(new Vector3Int(x, y, 0)) == biomeFloorTiles[biomeCount - 1]) // Check for stone biome
+                        {
+                            caveTilemap.SetTile(new Vector3Int(x, y, 0), null); // Remove stone tile
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    void FillGapsWithStone()
     {
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-                if (caveTilemap.GetTile(new Vector3Int(x, y, 0)) == null)
-                {
-                    float distanceFromCenter = Vector2Int.Distance(new Vector2Int(x, y), new Vector2Int(width / 2, height / 2));
-                    float noiseValue = Mathf.PerlinNoise(x * noiseScale, y * noiseScale);
+                Vector3Int tilePosition = new Vector3Int(x, y, 0);
 
-                    if (distanceFromCenter > biomeMaxDistance && noiseValue > noiseThreshold)
+                if (caveTilemap.GetTile(tilePosition) == null && !IsInAnyBiomeRadius(x, y))
+                {
+                    if (Mathf.PerlinNoise(x * stoneNoiseScale, y * stoneNoiseScale) < stoneNoiseThreshold)
                     {
-                        caveTilemap.SetTile(new Vector3Int(x, y, 0), biomeFloorTiles[biomeCount - 1]);
+                        caveTilemap.SetTile(tilePosition, biomeFloorTiles[biomeCount - 1]); // Set to stone biome (Biome 5)
                     }
                 }
             }
         }
+    }
+
+    bool IsInAnyBiomeRadius(int x, int y)
+    {
+        Vector2Int position = new Vector2Int(x, y);
+        foreach (var biomeCenter in biomeCenters.Values)
+        {
+            if (Vector2Int.Distance(biomeCenter, position) < biomeRadius)
+            {
+                return true; // Position is within the radius of an existing biome
+            }
+        }
+        return false; // Position is outside all biome radii
     }
 
     void GenerateOres()
@@ -146,14 +172,10 @@ public class CaveGenerator : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             {
-                if (caveTilemap.GetTile(new Vector3Int(x, y, 0)) != null)
+                if (caveTilemap.GetTile(new Vector3Int(x, y, 0)) != null &&
+                    Random.Range(0f, 100f) < oreSpawnChance)
                 {
-                    if (Random.Range(0f, 100f) < oreSpawnChance)
-                    {
-                        Vector2Int oreClusterCenter = new Vector2Int(x, y);
-                        int clusterSize = Random.Range(minOreClusterSize, maxOreClusterSize);
-                        PlaceOreCluster(oreClusterCenter, clusterSize);
-                    }
+                    PlaceOreCluster(new Vector2Int(x, y), Random.Range(minOreClusterSize, maxOreClusterSize));
                 }
             }
         }
@@ -164,55 +186,51 @@ public class CaveGenerator : MonoBehaviour
         TileBase oreTile = oreTiles[Random.Range(0, oreTiles.Length)];
         for (int i = 0; i < size; i++)
         {
-            int offsetX = Random.Range(-2, 3);
-            int offsetY = Random.Range(-2, 3);
-            Vector2Int orePosition = new Vector2Int(center.x + offsetX, center.y + offsetY);
-
-            if (orePosition.x >= 0 && orePosition.x < width && orePosition.y >= 0 && orePosition.y < height)
+            Vector2Int orePosition = new Vector2Int(center.x + Random.Range(-2, 3), center.y + Random.Range(-2, 3));
+            if (orePosition.x >= 0 && orePosition.x < width && orePosition.y >= 0 && orePosition.y < height &&
+                caveTilemap.GetTile(new Vector3Int(orePosition.x, orePosition.y, 0)) != null)
             {
-                if (caveTilemap.GetTile(new Vector3Int(orePosition.x, orePosition.y, 0)) != null)
-                {
-                    caveTilemap.SetTile(new Vector3Int(orePosition.x, orePosition.y, 0), oreTile);
-                }
+                caveTilemap.SetTile(new Vector3Int(orePosition.x, orePosition.y, 0), oreTile);
             }
         }
     }
 
-    void GenerateLiquids()
+    int GetBiomeFromPosition(Vector3 position)
     {
-        Debug.Log("Generating Liquids");
-        GenerateLiquid(waterTile, waterCount);
-        GenerateLiquid(lavaTile, lavaCount);
-    }
-
-    void GenerateLiquid(TileBase liquidTile, int count)
-    {
-        for (int i = 0; i < count; i++)
+        Vector2 playerPosition2D = new Vector2(position.x, position.y);
+        foreach (var biome in biomeCenters)
         {
-            Vector2Int liquidCenter = new Vector2Int(Random.Range(0, width), Random.Range(0, height));
+            Vector2 biomeCenter = biome.Value;
+            float distanceToCenter = Vector2.Distance(playerPosition2D, biomeCenter);
 
-            if (caveTilemap.GetTile(new Vector3Int(liquidCenter.x, liquidCenter.y, 0)) == null)
+            if (distanceToCenter <= biomeRadius)
             {
-                if (Random.Range(0f, 100f) < liquidSpawnChance)
-                {
-                    liquidTilemap.SetTile(new Vector3Int(liquidCenter.x, liquidCenter.y, 0), liquidTile);
-                    CreateLiquidTile(liquidCenter, liquidTile, true);
-                    SpawnFallingLiquidTiles(liquidCenter, liquidTile);
-                }
+                return biome.Key;
             }
+        }
+        return -1; // Player is not in any known biome
+    }
+
+    void UpdateOverlayBasedOnBiome()
+    {
+        if (player == null) { Debug.LogError("Player not assigned."); return; }
+
+        int playerBiome = GetBiomeFromPosition(player.position);
+        if (playerBiome != currentBiome)
+        {
+            currentBiome = playerBiome;
+            SwitchOverlay(playerBiome);
         }
     }
 
-    void SpawnFallingLiquidTiles(Vector2Int liquidCenter, TileBase liquidTile)
+    void SwitchOverlay(int biomeIndex)
     {
-        // Add logic for falling liquid tile behavior if needed
-    }
+        if (activeOverlay != null) Destroy(activeOverlay);
 
-    void CreateLiquidTile(Vector2Int position, TileBase liquidTile, bool isSource)
-    {
-        GameObject liquidGameObject = new GameObject("Liquid");
-        liquidGameObject.transform.position = new Vector3(position.x, position.y, 0);
-
-        // Add additional liquid behavior as needed (e.g., Rigidbody2D for physics, flow mechanics)
+        if (biomeIndex >= 0 && biomeIndex < biomeOverlayPrefabs.Length)
+        {
+            activeOverlay = Instantiate(biomeOverlayPrefabs[biomeIndex], mainCamera.transform);
+            activeOverlay.transform.localPosition = Vector3.zero;
+        }
     }
 }
