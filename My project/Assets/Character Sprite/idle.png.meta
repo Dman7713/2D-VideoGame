@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: e46ed053213186a47b9199edfd5bb14f
+guid: 415e3b5fd2040f6468f60b3fddb48e3d
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -97,13 +97,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: WalkingCaveExplorer-Sheet_0
+      name: idle_0
       rect:
         serializedVersion: 2
-        x: 7
-        y: 0
-        width: 25
-        height: 26
+        x: 0
+        y: 64
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -111,20 +111,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 42b301cebb1f69045b04d888693d4b84
-      internalID: 1054904328
+      spriteID: d87d0cb696865af49a01415429620873
+      internalID: 491534919
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: WalkingCaveExplorer-Sheet_1
+      name: idle_1
       rect:
         serializedVersion: 2
-        x: 54
-        y: 0
-        width: 27
-        height: 25
+        x: 32
+        y: 64
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -132,20 +132,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2d28ca289f32f4b4ba8acf66e97454f8
-      internalID: 1332017394
+      spriteID: fd52ea361069c8e4283500b6f9072664
+      internalID: -1189046121
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: WalkingCaveExplorer-Sheet_2
+      name: idle_2
       rect:
         serializedVersion: 2
-        x: 103
-        y: 0
-        width: 26
-        height: 27
+        x: 0
+        y: 32
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -153,20 +153,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cf80c5a33d2003646acbb4849e80bf10
-      internalID: 898850904
+      spriteID: 23b32b0230ee03c44a618da0ff47cf63
+      internalID: 1104054498
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: WalkingCaveExplorer-Sheet_3
+      name: idle_3
       rect:
         serializedVersion: 2
-        x: 150
-        y: 0
-        width: 27
-        height: 29
+        x: 32
+        y: 32
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -174,20 +174,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9f12535bd7b4d9e41887f71ae12c9fc5
-      internalID: 1092899899
+      spriteID: d74dc2024c68b22459df4a53f27f13f7
+      internalID: 597428819
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: WalkingCaveExplorer-Sheet_4
+      name: idle_4
       rect:
         serializedVersion: 2
-        x: 199
+        x: 0
         y: 0
-        width: 27
-        height: 26
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -195,20 +195,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b5c0b0debc9333f4db3b440d3e7c9793
-      internalID: 1985555782
+      spriteID: f7f7d08a7187a0c43915cee248c43316
+      internalID: -411601057
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: WalkingCaveExplorer-Sheet_5
+      name: idle_5
       rect:
         serializedVersion: 2
-        x: 246
+        x: 32
         y: 0
-        width: 27
-        height: 26
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -216,71 +216,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6ce8bc7309b572149939251499616d6d
-      internalID: 552068106
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: WalkingCaveExplorer-Sheet_6
-      rect:
-        serializedVersion: 2
-        x: 294
-        y: 0
-        width: 25
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 238da80d52ee98b48a626af2136f6e1c
-      internalID: 77366526
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: WalkingCaveExplorer-Sheet_7
-      rect:
-        serializedVersion: 2
-        x: 342
-        y: 0
-        width: 26
-        height: 27
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 07b01f9982a637d40bf32ca47804527b
-      internalID: 1952303855
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: WalkingCaveExplorer-Sheet_8
-      rect:
-        serializedVersion: 2
-        x: 390
-        y: 0
-        width: 26
-        height: 27
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 4a465715a0f3d9b4c879a6faf59603ce
-      internalID: 205140637
+      spriteID: c60a1bb660a503142a74c1b974edcb15
+      internalID: 1320796695
       vertices: []
       indices: 
       edges: []
@@ -296,15 +233,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      WalkingCaveExplorer-Sheet_0: 1054904328
-      WalkingCaveExplorer-Sheet_1: 1332017394
-      WalkingCaveExplorer-Sheet_2: 898850904
-      WalkingCaveExplorer-Sheet_3: 1092899899
-      WalkingCaveExplorer-Sheet_4: 1985555782
-      WalkingCaveExplorer-Sheet_5: 552068106
-      WalkingCaveExplorer-Sheet_6: 77366526
-      WalkingCaveExplorer-Sheet_7: 1952303855
-      WalkingCaveExplorer-Sheet_8: 205140637
+      idle_0: 491534919
+      idle_1: -1189046121
+      idle_2: 1104054498
+      idle_3: 597428819
+      idle_4: -411601057
+      idle_5: 1320796695
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
