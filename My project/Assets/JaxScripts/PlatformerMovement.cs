@@ -15,6 +15,15 @@ public class PlatformerMovement : MonoBehaviour
     bool facingRight = true;  // To check if the player is facing right
     float timer = 0;  // Coyote time timer
 
+    [Header("Wallcheck")] // checks for any walls touching the player
+    public Transform wallCheckPos; 
+    public Vector2 wallCheckSize = new Vector2(0.49f, 0.03f);
+    public LayerMask wallLayer;
+
+    [Header("WallMovment")] // wallslide basic funtions
+    public float wallSlideSpeed = 2;
+    bool isWallSlideing;
+
     Rigidbody2D rb;
 
     void Start()
@@ -25,11 +34,34 @@ public class PlatformerMovement : MonoBehaviour
     void Update()
     {
         float moveX = Input.GetAxis("Horizontal");
-        Vector2 velocity = rb.velocity;
-
-        // Horizontal movement logic
-        velocity.x = moveX * moveSpeed;
-        rb.velocity = velocity;
+        var velocity = GetComponent<Rigidbody2D>().velocity;
+        velocity.x += moveX * accelleration * Time.deltaTime;
+        velocity.x = Mathf.Clamp(velocity.x, -moveSpeed, moveSpeed);
+        GetComponent<Rigidbody2D>().velocity = velocity;
+        /*if(Input.GetButtonDown("Jump") && grounded)
+        {
+            GetComponent<Rigidbody2D>().AddForce(
+                new Vector2(0, 100 * jumpSpeed));
+        }*/
+        if (Input.GetButtonDown("Jump"))
+        {
+            grounded = CheckIfGrounded();
+            if (grounded)
+            {
+                GetComponent<Rigidbody2D>().AddForce(
+                new Vector2(0, 100 * jumpSpeed));
+            }
+            else if (CheckIfLeftWallJump())
+            {
+                GetComponent<Rigidbody2D>().AddForce(
+                new Vector2(100 * wallJumpSpeed, 100 * jumpSpeed));
+            }
+            else if (CheckIfRightWallJump())
+            {
+                GetComponent<Rigidbody2D>().AddForce(
+                new Vector2(-100 * wallJumpSpeed, 100 * jumpSpeed));
+            }
+        }
 
         // Update the animator with the speed (absolute value)
         animator.SetFloat("Speed", Mathf.Abs(moveX));
@@ -52,11 +84,9 @@ public class PlatformerMovement : MonoBehaviour
         }
 
         // Jump logic
-        if (Input.GetButtonDown("Jump") && canJump)
+        if (Input.GetButtonDown("Jump") && grounded)
         {
-            rb.AddForce(new Vector2(0, 100 * jumpSpeed));
-            grounded = false;
-            canJump = false;
+       
 
             // Set animator jumping state
             animator.SetBool("IsJumping", true);
@@ -84,7 +114,7 @@ public class PlatformerMovement : MonoBehaviour
         if (collision.gameObject.layer == 6) // Assuming layer 6 is ground
         {
             timer = 0;
-            grounded = true;
+
             canJump = true;
 
             // Reset jumping animation when grounded
@@ -97,7 +127,7 @@ public class PlatformerMovement : MonoBehaviour
         if (collision.gameObject.layer == 6)
         {
             timer = 0;
-            grounded = false;
+        
         }
     }
 
@@ -111,5 +141,73 @@ public class PlatformerMovement : MonoBehaviour
         Vector3 scale = spriteTransform.localScale;
         scale.x *= -1;
         spriteTransform.localScale = scale;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        // vizuals for wall check
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireCube(wallCheckPos.position, wallCheckSize);
+    }
+    private void processWallSlide()
+    {
+        // not grounded &  on a wall & movement != 0
+        if (!grounded & WallCheck())
+        {
+
+        }
+    }
+    private bool WallCheck()
+    {
+        return Physics2D.OverlapBox(wallCheckPos.position, wallCheckSize, 0, wallLayer);
+    }
+    public float accelleration = 1.0f;
+    public bool leftWall = false;
+    public float wallJumpSpeed = 1.0f;
+   
+
+   
+    bool CheckIfGrounded()
+    {
+        RaycastHit2D[] hit;
+        hit = Physics2D.RaycastAll(transform.position, new Vector2(0, -1), Mathf.Infinity);
+        Debug.Log(hit[1].collider.gameObject.name);
+        Debug.DrawRay(transform.position, new Vector2(0, -1 * transform.lossyScale.y * 0.6f), Color.red, 0.25f);
+        if (hit[1].collider.gameObject.layer == 6 && hit[1].distance < transform.localScale.y * 0.6f)// && hit[1].distance > 0.6f * transform.localScale.y)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    bool CheckIfLeftWallJump()
+    {
+        RaycastHit2D[] hit;
+        hit = Physics2D.RaycastAll(transform.position, new Vector2(-1, 0), Mathf.Infinity);
+        Debug.DrawRay(transform.position, new Vector2(-1 * transform.lossyScale.x * 0.6f, 0), Color.red, 0.25f);
+        if (hit[1].collider.gameObject.layer == 6 && hit[1].distance < transform.localScale.x * 0.6f)// && hit[1].distance > 0.6f * transform.localScale.y)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    bool CheckIfRightWallJump()
+    {
+        RaycastHit2D[] hit;
+        hit = Physics2D.RaycastAll(transform.position, new Vector2(-1, 0), Mathf.Infinity);
+        Debug.DrawRay(transform.position, new Vector2(transform.lossyScale.x * 0.6f, 0), Color.red, 0.25f);
+        if (hit[1].collider.gameObject.layer == 6 && hit[1].distance < transform.localScale.x * 0.6f)// && hit[1].distance > 0.6f * transform.localScale.y)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }
