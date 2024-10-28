@@ -84,7 +84,7 @@ public class PlatformerMovement : MonoBehaviour
         }
 
         // Jump logic
-        if (Input.GetButtonDown("Jump") && canJump)
+        if (Input.GetButtonDown("Jump") && grounded)
         {
        
 
