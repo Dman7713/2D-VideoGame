@@ -15,14 +15,10 @@ public class PlatformerMovement : MonoBehaviour
     bool facingRight = true;  // To check if the player is facing right
     float timer = 0;  // Coyote time timer
 
-    [Header("Wallcheck")] // checks for any walls touching the player
-    public Transform wallCheckPos; 
-    public Vector2 wallCheckSize = new Vector2(0.49f, 0.03f);
-    public LayerMask wallLayer;
-
-    [Header("WallMovment")] // wallslide basic funtions
-    public float wallSlideSpeed = 2;
-    bool isWallSlideing;
+    public float accelleration = 1.0f;
+    public bool leftWall = false;
+    public float wallJumpSpeed = 1.0f;
+    
 
     Rigidbody2D rb;
 
@@ -142,29 +138,6 @@ public class PlatformerMovement : MonoBehaviour
         scale.x *= -1;
         spriteTransform.localScale = scale;
     }
-
-    private void OnDrawGizmosSelected()
-    {
-        // vizuals for wall check
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireCube(wallCheckPos.position, wallCheckSize);
-    }
-    private void processWallSlide()
-    {
-        // not grounded &  on a wall & movement != 0
-        if (!grounded & WallCheck())
-        {
-
-        }
-    }
-    private bool WallCheck()
-    {
-        return Physics2D.OverlapBox(wallCheckPos.position, wallCheckSize, 0, wallLayer);
-    }
-    public float accelleration = 1.0f;
-    public bool leftWall = false;
-    public float wallJumpSpeed = 1.0f;
-   
 
    
     bool CheckIfGrounded()
