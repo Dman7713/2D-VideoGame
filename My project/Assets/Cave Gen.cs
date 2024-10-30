@@ -39,6 +39,7 @@ public class CaveGenerator : MonoBehaviour
     private void Start()
     {
         GenerateCave();
+        SpawnPlayerAtCenter(); // Spawn player in the center of the map
     }
 
     private void Update()
@@ -56,6 +57,20 @@ public class CaveGenerator : MonoBehaviour
         FillGapsWithStone();      // Fill the gaps with the stone biome (Biome 5)
         GenerateOres();           // Generate ores in the cave
         Debug.Log("Cave with unique-shaped biomes and ores generated.");
+    }
+
+    void SpawnPlayerAtCenter()
+    {
+        if (player != null)
+        {
+            // Calculate the center position of the map
+            Vector3 centerPosition = new Vector3(width / 2, height / 2, 0);
+            player.position = centerPosition; // Set player's position to center
+        }
+        else
+        {
+            Debug.LogError("Player not assigned.");
+        }
     }
 
     void CreateBiomes()
@@ -215,22 +230,21 @@ public class CaveGenerator : MonoBehaviour
     {
         if (player == null) { Debug.LogError("Player not assigned."); return; }
 
-        int playerBiome = GetBiomeFromPosition(player.position);
-        if (playerBiome != currentBiome)
+        int biomeIndex = GetBiomeFromPosition(player.position);
+        if (biomeIndex != currentBiome)
         {
-            currentBiome = playerBiome;
-            SwitchOverlay(playerBiome);
-        }
-    }
+            if (currentBiome != -1 && activeOverlay != null)
+            {
+                Destroy(activeOverlay); // Destroy previous overlay
+            }
 
-    void SwitchOverlay(int biomeIndex)
-    {
-        if (activeOverlay != null) Destroy(activeOverlay);
+            currentBiome = biomeIndex;
 
-        if (biomeIndex >= 0 && biomeIndex < biomeOverlayPrefabs.Length)
-        {
-            activeOverlay = Instantiate(biomeOverlayPrefabs[biomeIndex], mainCamera.transform);
-            activeOverlay.transform.localPosition = Vector3.zero;
+            if (currentBiome != -1)
+            {
+                activeOverlay = Instantiate(biomeOverlayPrefabs[currentBiome], Vector3.zero, Quaternion.identity);
+                Debug.Log($"Overlay for biome {currentBiome} activated.");
+            }
         }
     }
 }
