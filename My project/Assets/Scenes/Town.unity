@@ -157,8 +157,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   jumpSpeed: 2
-  cyoteTime: 2
-  timer: 0
+  coyoteTime: 0.2
+  animator: {fileID: 0}
+  spriteTransform: {fileID: 0}
+  accelleration: 1
+  leftWall: 0
+  wallJumpSpeed: 1
 --- !u!50 &215041420
 Rigidbody2D:
   serializedVersion: 4
@@ -691,7 +695,7 @@ GameObject:
   - component: {fileID: 833092691}
   - component: {fileID: 833092690}
   - component: {fileID: 833092689}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
