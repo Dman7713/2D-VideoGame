@@ -4,23 +4,19 @@ using UnityEngine;
 
 public class betterai : MonoBehaviour
 {
-    public GameObject pointA;
-    public GameObject pointB;
-    private Rigidbody2D rb;
-    private Transform currentPoint;
+   
     GameObject player;
     [SerializeField]
     float chaseSpeed = 10f;
     [SerializeField]
     float chaseTriggerDistance = 5.0f;
-    [SerializeField]
-    float speed = 3;
+    public Transform[] PatrolPoints;
+    public float moveSpeed;
+    public int patrolDestination;
     // Start is called before the first frame update
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
-        rb = GetComponent<Rigidbody2D>();
-        currentPoint = pointB.transform;
     }
 
     // Update is called once per frame
@@ -39,24 +35,23 @@ public class betterai : MonoBehaviour
         }
         else
         {
-            Vector2 point = currentPoint.position - transform.position;
-            if (currentPoint == pointB.transform)
+            if (patrolDestination == 0)
             {
-                rb.velocity = new Vector2(speed, 0);
+                transform.position = Vector2.MoveTowards(transform.position, PatrolPoints[0].position, moveSpeed * Time.deltaTime);
+                if(Vector3.Distance(transform.position, PatrolPoints[0]).position) < .2f)
+                {
+                    transform.localScale = new Vector3(1, 1, 1);
+                    patrolDestination = 1;
+                }
             }
-            else
+            if (patrolDestination == 0)
             {
-                rb.velocity = new Vector2(-speed, 0);
+                transform.position = Vector2.MoveTowards(transform.position, PatrolPoints[1].position, moveSpeed * Time.deltaTime);
+                if (Vector3.Distance(transform.position, PatrolPoints[1]).position) < .2f)
+                {
+                    transform.localScale = new Vector3(-1, 1, 1);
+                    patrolDestination = 0;
+                }
             }
-
-            if (Vector2.Distance(transform.position, currentPoint.position) < 0.5f && currentPoint == pointB.transform)
-            {
-                currentPoint = pointA.transform;
-            }
-            if (Vector2.Distance(transform.position, currentPoint.position) < 0.5f && currentPoint == pointA.transform)
-            {
-                currentPoint = pointB.transform;
-            }
-        }
     }
 }
