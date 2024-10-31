@@ -48,10 +48,6 @@ public class PlayerMovement : MonoBehaviour
             canJump = false;
         }
 
-        //set up timer
-        timer += Time.deltaTime;
-        ProcessWallSlide();
-
 
     }
 
