@@ -48,8 +48,11 @@ public class PlayerMovement : MonoBehaviour
             canJump = false;
         }
 
-        // Timer update
+        //set up timer
         timer += Time.deltaTime;
+        ProcessWallSlide();
+
+
     }
 
     private void FixedUpdate()
