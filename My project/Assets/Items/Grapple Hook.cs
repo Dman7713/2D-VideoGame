@@ -1,67 +1,64 @@
 using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
 public class GrappleHook : MonoBehaviour
 {
-    [SerializeField] private float grappleLength; // Maximum length for the grapple
-    [SerializeField] private LayerMask grappleLayer; // LayerMask to identify valid grapple surfaces
-    [SerializeField] private LineRenderer rope; // LineRenderer for the grapple rope
+    public float swingForce = 10f; // Force applied for swinging
+    public Transform player; // Reference to the player's transform
+    private Vector2 grapplePoint; // Point where the player is grappled
+    private bool isGrappling = false; // Track if the player is grappling
+    private Rigidbody2D playerRb; // Reference to the player's Rigidbody2D
 
-    private Vector3 grapplePoint; // Point where the grapple attaches
-    private DistanceJoint2D joint; // DistanceJoint2D for grappling
-
-    // Start is called before the first frame update
     void Start()
     {
-        joint = GetComponent<DistanceJoint2D>(); // Get the DistanceJoint2D component
-        joint.enabled = false; // Initially disable the joint
-        rope.enabled = false; // Initially disable the rope
+        playerRb = player.GetComponent<Rigidbody2D>(); // Get the player's Rigidbody2D
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        // Check for right mouse button input
+        if (Input.GetMouseButtonDown(1) && !isGrappling) // Right mouse button (button 1)
         {
-            // Get the world point from the mouse position
-            Vector3 origin = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            origin.z = 0; // Reset Z to zero for 2D raycast
+            TryGrapple();
+        }
 
-            // Cast a ray from the player's position toward the mouse position
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, (origin - transform.position).normalized, grappleLength, grappleLayer);
+        // Swinging logic
+        if (isGrappling)
+        {
+            SwingPlayer();
 
-            if (hit.collider != null)
+            if (Input.GetMouseButtonUp(1)) // Release the right mouse button
             {
-                grapplePoint = hit.point; // Set the grapple point to the hit point
-                joint.connectedAnchor = grapplePoint; // Set the joint's connected anchor
-                joint.enabled = true; // Enable the joint
-                joint.distance = grappleLength; // Set the distance of the joint
-
-                // Update the LineRenderer positions
-                rope.SetPosition(0, grapplePoint); // Start of the rope at the grapple point
-                rope.SetPosition(1, transform.position); // End of the rope at the player
-                rope.enabled = true; // Enable the rope
+                ReleaseGrapple();
             }
-        }
-
-        if (Input.GetMouseButtonUp(0))
-        {
-            StopGrapple(); // Call method to stop grappling
-        }
-
-        if (rope.enabled)
-        {
-            // Update the LineRenderer's second position to follow the player's position
-            rope.SetPosition(1, transform.position); // Update the player's position in the rope
         }
     }
 
-    // Method to stop grappling
-    private void StopGrapple()
+    void TryGrapple()
     {
-        joint.enabled = false; // Disable the joint
-        rope.enabled = false; // Disable the rope
+        // Cast a ray from the camera to the mouse position
+        RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+
+        // Check if we hit an object on the grapple layer
+        if (hit.collider != null && hit.collider.gameObject.layer == LayerMask.NameToLayer("Grappleable"))
+        {
+            grapplePoint = hit.point; // Set the grapple point
+            isGrappling = true; // Set grappling to true
+            playerRb.velocity = Vector2.zero; // Stop the player's movement abruptly
+        }
+    }
+
+    void SwingPlayer()
+    {
+        // Calculate direction from the player to the grapple point
+        Vector2 direction = (grapplePoint - (Vector2)player.position).normalized;
+        Vector2 force = new Vector2(-direction.y, direction.x) * swingForce; // Perpendicular direction for swinging
+
+        playerRb.AddForce(force * Time.deltaTime, ForceMode2D.Force); // Apply the swing force
+    }
+
+    void ReleaseGrapple()
+    {
+        isGrappling = false; // Set grappling to false
     }
 }
