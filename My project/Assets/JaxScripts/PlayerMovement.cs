@@ -60,7 +60,7 @@ public class PlayerMovement : MonoBehaviour
         //set up timer
         timer += Time.deltaTime;
 
-        ProcessWallSlide();
+        
     }
     private void FixedUpdate()
     {
