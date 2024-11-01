@@ -1,42 +1,49 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyPatrol : MonoBehaviour
 {
-    public GameObject pointA;
-    public GameObject pointB;
-    private Rigidbody2D rb;
-    private Transform currentPoint;
-    [SerializeField]
-    float speed = 3;
-    // Start is called before the first frame update
+    public Transform[] patrolPoints; // Array of points to patrol between
+    public float patrolSpeed = 2f;   // Speed while patrolling
+    public float chaseSpeed = 5f;    // Speed while chasing
+    public float detectionRange = 5f; // Range to detect the player
+    public float returnRange = 6f;    // Range to stop chasing
+
+    private int currentPatrolIndex;
+    private Transform player;
+
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
-        currentPoint = pointB.transform;
+        currentPatrolIndex = 0;
+        player = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        Vector2 point = currentPoint.position - transform.position;
-        if(currentPoint == pointB.transform) 
-        {
-            rb.velocity = new Vector2(speed, 0);
-        }
-        else
-        {
-            rb.velocity = new Vector2(-speed, 0);
-        }
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
-        if (Vector2.Distance(transform.position, currentPoint.position) < 0.5f && currentPoint == pointB.transform)
+        if (distanceToPlayer < detectionRange)
         {
-            currentPoint = pointA.transform;
+            ChasePlayer();
         }
-        if (Vector2.Distance(transform.position, currentPoint.position) < 0.5f && currentPoint == pointA.transform)
+        else if (distanceToPlayer > returnRange)
         {
-            currentPoint = pointB.transform;
+            Patrol();
         }
+    }
+
+    void Patrol()
+    {
+        Transform targetPatrolPoint = patrolPoints[currentPatrolIndex];
+        transform.position = Vector3.MoveTowards(transform.position, targetPatrolPoint.position, patrolSpeed * Time.deltaTime);
+
+        if (Vector3.Distance(transform.position, targetPatrolPoint.position) < 0.1f)
+        {
+            currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Length;
+        }
+    }
+
+    void ChasePlayer()
+    {
+        transform.position = Vector3.MoveTowards(transform.position, player.position, chaseSpeed * Time.deltaTime);
     }
 }

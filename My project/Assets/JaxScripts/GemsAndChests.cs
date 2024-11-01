@@ -62,7 +62,7 @@ public class GemsAndChests : MonoBehaviour
             HUD.GetComponent<Canvas>().enabled = false;
            
             win.GetComponent<Canvas>().enabled = true;
-            
+            Time.timeScale = 0;
         }
 
 
