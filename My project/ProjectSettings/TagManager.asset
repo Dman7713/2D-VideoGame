@@ -9,6 +9,10 @@ TagManager:
   - Enemy
   - point A
   - point B
+  - Chest1
+  - Chest2
+  - Chest3
+  - Chest4
   layers:
   - Default
   - TransparentFX
