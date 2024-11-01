@@ -1,63 +1,54 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
-public class BetterAI : MonoBehaviour
+public class betterai : MonoBehaviour
 {
-    GameObject player;
-    [SerializeField]
-    float chaseSpeed = 10f;
-    [SerializeField]
-    float chaseTriggerDistance = 5.0f;
-    public Transform[] PatrolPoints;
-    public float moveSpeed;
-    public int patrolDestination = 0; // Initial patrol destination
+    public float wanderRadius = 10f;   // Radius in which the enemy can wander
+    public float wanderInterval = 2f;   // Time interval between movements
+    public float detectionRange = 5f;   // Range to detect the player
+    public float returnRange = 6f;      // Range to stop chasing
+    public float chaseSpeed = 5f;       // Speed while chasing
 
-    // Start is called before the first frame update
+    private NavMeshAgent agent;         // Reference to the NavMeshAgent
+    private Transform player;           // Reference to the player's transform
+    private float nextWanderTime;       // Time to wait before wandering again
+
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player");
+        agent = GetComponent<NavMeshAgent>();
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+        Wander();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        // If the player gets too close, start chasing
-        Vector3 playerPosition = player.transform.position;
-        Vector3 chaseDir = playerPosition - transform.position;
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
-        if (chaseDir.magnitude < chaseTriggerDistance)
+        if (distanceToPlayer < detectionRange)
         {
-            // Chase the player
-            chaseDir.Normalize();
-            GetComponent<Rigidbody2D>().velocity = chaseDir * chaseSpeed;
+            ChasePlayer();
         }
-        else
+        else if (Time.time >= nextWanderTime && distanceToPlayer > returnRange)
         {
-            Patrol();
+            Wander();
         }
     }
 
-    // Patrol behavior when player is out of range
-    void Patrol()
+    void Wander()
     {
-        if (patrolDestination == 0)
-        {
-            transform.position = Vector2.MoveTowards(transform.position, PatrolPoints[0].position, moveSpeed * Time.deltaTime);
-            if (Vector3.Distance(transform.position, PatrolPoints[0].position) < 0.2f)
-            {
-                transform.localScale = new Vector3(1, 1, 1);
-                patrolDestination = 1;
-            }
-        }
-        else if (patrolDestination == 1)
-        {
-            transform.position = Vector2.MoveTowards(transform.position, PatrolPoints[1].position, moveSpeed * Time.deltaTime);
-            if (Vector3.Distance(transform.position, PatrolPoints[1].position) < 0.2f)
-            {
-                transform.localScale = new Vector3(-1, 1, 1);
-                patrolDestination = 0;
-            }
-        }
+        Vector3 randomDirection = Random.insideUnitSphere * wanderRadius;
+        randomDirection += transform.position;
+
+        NavMeshHit hit;
+        NavMesh.SamplePosition(randomDirection, out hit, wanderRadius, NavMesh.AllAreas);
+        agent.SetDestination(hit.position);
+
+        nextWanderTime = Time.time + wanderInterval; // Set the next time to wander
+    }
+
+    void ChasePlayer()
+    {
+        agent.SetDestination(player.position);
+        agent.speed = chaseSpeed; // Set speed for chasing
     }
 }
