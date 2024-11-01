@@ -17,6 +17,8 @@ public class GemsAndChests : MonoBehaviour
     Image gem4;
     [SerializeField]
     Canvas win;
+    [SerializeField]
+    Canvas HUD;
 
     // Start is called before the first frame update
     void Start()
@@ -55,8 +57,14 @@ public class GemsAndChests : MonoBehaviour
     }
     public void Win()
     {
-        
-        
-        win.GetComponent<Canvas>().enabled = true;
+        if (gem1.GetComponent<Image>().enabled == true && gem2.GetComponent<Image>().enabled == true && gem3.GetComponent<Image>().enabled == true && gem4.GetComponent<Image>().enabled == true)
+        {
+            HUD.GetComponent<Canvas>().enabled = false;
+           
+            win.GetComponent<Canvas>().enabled = true;
+            
+        }
+
+
     }
 }
