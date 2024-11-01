@@ -6,32 +6,45 @@ public class CaveGenerator : MonoBehaviour
 {
     [Header("Tilemap Settings")]
     [SerializeField] private Tilemap caveTilemap;
-
-    [Header("Biome and Border Tiles")]
-    [SerializeField] private TileBase[] biomeFloorTiles; // Tiles for different biomes
+    [SerializeField] private Tilemap bgTilemap; // Tilemap for background tiles
+    [SerializeField] private Tilemap radiusTilemap; // New Tilemap for filling radius around biomes
     [SerializeField] private TileBase borderTile; // Tile for the border
 
+    [Header("Biome Tiles")]
+    [SerializeField] private TileBase[] biomeFloorTiles; // Different tiles for each biome
+    [SerializeField] private TileBase[] biomeBackgroundTiles; // Different background tiles for each biome
+    [SerializeField] private TileBase radiusTile; // Tile to fill in the radius around each biome
+
+    [Header("Overlay Prefabs")]
+    [SerializeField] private GameObject[] biomeOverlayPrefabs; // Prefabs for overlay effects in each biome
+
     [Header("Map Dimensions")]
-    [SerializeField] private int width = 100;
-    [SerializeField] private int height = 100;
-    [SerializeField] private int borderWidth = 2; // Adjustable border width
+    [SerializeField] private int width = 100, height = 100;
 
     [Header("Biome Settings")]
     [SerializeField] private int biomeCount = 5;
     [SerializeField] private float biomeRadius = 30f;
-    [SerializeField] private float noiseScale = 0.1f;
-    [SerializeField] private float noiseThreshold = 0.5f;
-    [SerializeField] private float stoneNoiseScale = 0.1f;
-    [SerializeField] private float stoneNoiseThreshold = 0.5f;
+    [SerializeField] private float noiseScale = 0.1f, noiseThreshold = 0.5f;
 
-    [Header("Border Noise Settings")]
-    [SerializeField] private float borderNoiseScale = 0.1f; // Scale of noise variation on the border
-    [SerializeField] private float borderNoiseIntensity = 0.5f; // Intensity of the border noise effect
+    [Header("Radius Settings")]
+    [SerializeField] private float radiusSize = 15f; // New variable for radius size
 
-    [Header("Player Settings")]
+    [Header("Stone Settings")]
+    [SerializeField] private float stoneNoiseScale = 0.1f; // Scale for stone noise
+    [SerializeField] private float stoneNoiseThreshold = 0.5f; // Threshold for stone placement
+
+    [Header("Border Settings")]
+    [SerializeField] private int borderWidth = 5;
+    [SerializeField] private float borderNoiseScale = 0.1f;
+    [SerializeField] private float borderNoiseThreshold = 0.5f;
+
+    [Header("Camera Settings")]
+    [SerializeField] private Camera mainCamera;
     [SerializeField] private Transform player;
 
     private Dictionary<int, Vector2Int> biomeCenters = new Dictionary<int, Vector2Int>();
+    private GameObject activeOverlay;
+    private int currentBiome = -1;
 
     private void Start()
     {
@@ -39,17 +52,70 @@ public class CaveGenerator : MonoBehaviour
         SpawnPlayerAtCenter();
     }
 
+    private void Update()
+    {
+        UpdateOverlayBasedOnBiome();
+    }
+
     void GenerateCave()
     {
         caveTilemap.ClearAllTiles();
+        bgTilemap.ClearAllTiles(); // Clear the background tilemap
+        radiusTilemap.ClearAllTiles(); // Clear the radius tilemap
         biomeCenters.Clear();
 
         CreateBiomes();
+        FillBiomeBackgrounds(); // Fill the background for each biome
         RemoveStoneInBiomes();
         FillGapsWithStone();
-        GenerateBorder();
+        FillBiomeRadius(); // Fill the radius around biomes
+        CreateFadingBorder();
+        Debug.Log("Cave with unique-shaped biomes, fading border, and radius filled generated.");
+    }
 
-        Debug.Log("Cave with biomes and irregular border generated.");
+    void FillBiomeRadius()
+    {
+        foreach (var biomeCenter in biomeCenters)
+        {
+            Vector2Int center = biomeCenter.Value;
+            for (int x = center.x - (int)radiusSize; x <= center.x + (int)radiusSize; x++)
+            {
+                for (int y = center.y - (int)radiusSize; y <= center.y + (int)radiusSize; y++)
+                {
+                    if (Vector2Int.Distance(center, new Vector2Int(x, y)) <= radiusSize)
+                    {
+                        radiusTilemap.SetTile(new Vector3Int(x, y, 0), radiusTile);
+                    }
+                }
+            }
+        }
+    }
+
+    void CreateFadingBorder()
+    {
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                // Calculate distance to the nearest edge
+                int distanceToEdge = Mathf.Min(x, y, width - 1 - x, height - 1 - y);
+
+                if (distanceToEdge < borderWidth)
+                {
+                    Vector3Int tilePosition = new Vector3Int(x, y, 0);
+
+                    // Perlin noise creates the fading effect towards the inner tiles
+                    float noiseValue = Mathf.PerlinNoise(x * borderNoiseScale, y * borderNoiseScale);
+                    float fadeFactor = Mathf.InverseLerp(0, borderWidth, distanceToEdge);  // Smooth fading
+
+                    // Set tile based on noise and distance to the edge
+                    if (noiseValue > borderNoiseThreshold * fadeFactor)
+                    {
+                        caveTilemap.SetTile(tilePosition, borderTile);
+                    }
+                }
+            }
+        }
     }
 
     void SpawnPlayerAtCenter()
@@ -116,6 +182,42 @@ public class CaveGenerator : MonoBehaviour
                 }
             }
         }
+
+        // Fill edges of the biome to ensure it merges into the border
+        FillBiomeEdges(center, biomeIndex);
+    }
+
+    void FillBiomeEdges(Vector2Int center, int biomeIndex)
+    {
+        // Fill tiles around the biome center to ensure it merges into the border
+        for (int x = center.x - 1; x <= center.x + 1; x++)
+        {
+            for (int y = center.y - 1; y <= center.y + 1; y++)
+            {
+                if (x >= 0 && x < width && y >= 0 && y < height)
+                {
+                    caveTilemap.SetTile(new Vector3Int(x, y, 0), biomeFloorTiles[biomeIndex]);
+                }
+            }
+        }
+    }
+
+    void FillBiomeBackgrounds()
+    {
+        foreach (var biomeCenter in biomeCenters)
+        {
+            Vector2Int center = biomeCenter.Value;
+            for (int x = center.x - (int)biomeRadius; x <= center.x + (int)biomeRadius; x++)
+            {
+                for (int y = center.y - (int)biomeRadius; y <= center.y + (int)biomeRadius; y++)
+                {
+                    if (Vector2Int.Distance(center, new Vector2Int(x, y)) <= biomeRadius)
+                    {
+                        bgTilemap.SetTile(new Vector3Int(x, y, 0), biomeBackgroundTiles[biomeCenter.Key]);
+                    }
+                }
+            }
+        }
     }
 
     void RemoveStoneInBiomes()
@@ -146,24 +248,24 @@ public class CaveGenerator : MonoBehaviour
             for (int y = 0; y < height; y++)
             {
                 Vector3Int tilePosition = new Vector3Int(x, y, 0);
-
-                if (caveTilemap.GetTile(tilePosition) == null && !IsInAnyBiomeRadius(x, y))
+                if (caveTilemap.GetTile(tilePosition) == null && !IsInAnyBiomeRadius(new Vector2Int(x, y)))
                 {
-                    if (Mathf.PerlinNoise(x * stoneNoiseScale, y * stoneNoiseScale) < stoneNoiseThreshold)
+                    // Place stone if the tile is empty and not near a biome
+                    float noiseValue = Mathf.PerlinNoise(x * stoneNoiseScale, y * stoneNoiseScale);
+                    if (noiseValue > stoneNoiseThreshold)
                     {
-                        caveTilemap.SetTile(tilePosition, biomeFloorTiles[biomeCount - 1]);
+                        caveTilemap.SetTile(tilePosition, biomeFloorTiles[biomeCount - 1]); // Assume the last tile is the stone tile
                     }
                 }
             }
         }
     }
 
-    bool IsInAnyBiomeRadius(int x, int y)
+    bool IsInAnyBiomeRadius(Vector2Int position)
     {
-        Vector2Int position = new Vector2Int(x, y);
         foreach (var biomeCenter in biomeCenters.Values)
         {
-            if (Vector2Int.Distance(biomeCenter, position) < biomeRadius)
+            if (Vector2Int.Distance(position, biomeCenter) < biomeRadius)
             {
                 return true;
             }
@@ -171,21 +273,35 @@ public class CaveGenerator : MonoBehaviour
         return false;
     }
 
-    void GenerateBorder()
+    void UpdateOverlayBasedOnBiome()
     {
-        for (int x = -borderWidth; x < width + borderWidth; x++)
+        // Update biome overlay based on player's position and current biome
+        Vector2Int playerPosition = new Vector2Int(Mathf.FloorToInt(player.position.x), Mathf.FloorToInt(player.position.y));
+        int biomeIndex = GetCurrentBiome(playerPosition);
+
+        if (biomeIndex != currentBiome)
         {
-            for (int y = -borderWidth; y < height + borderWidth; y++)
+            currentBiome = biomeIndex;
+            if (activeOverlay != null)
             {
-                if (x < 0 || x >= width || y < 0 || y >= height)
-                {
-                    float noiseValue = Mathf.PerlinNoise(x * borderNoiseScale, y * borderNoiseScale);
-                    if (noiseValue > borderNoiseIntensity) // Only apply tile if noise exceeds threshold
-                    {
-                        caveTilemap.SetTile(new Vector3Int(x, y, 0), borderTile);
-                    }
-                }
+                Destroy(activeOverlay);
+            }
+            if (currentBiome >= 0)
+            {
+                activeOverlay = Instantiate(biomeOverlayPrefabs[currentBiome], transform);
             }
         }
+    }
+
+    int GetCurrentBiome(Vector2Int position)
+    {
+        for (int i = 0; i < biomeCenters.Count; i++)
+        {
+            if (Vector2Int.Distance(position, biomeCenters[i]) < biomeRadius)
+            {
+                return i;
+            }
+        }
+        return -1; // Not in any biome
     }
 }
