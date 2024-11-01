@@ -40,9 +40,23 @@ public class GemsAndChests : MonoBehaviour
         {
             gem1.GetComponent<Image>().enabled = true;
         }
+        if (collision.gameObject.tag == "Chest2")
+        {
+            gem2.GetComponent<Image>().enabled = true;
+        }
+        if (collision.gameObject.tag == "Chest3")
+        {
+            gem3.GetComponent<Image>().enabled = true;
+        }
+        if (collision.gameObject.tag == "Chest4")
+        {
+            gem4.GetComponent<Image>().enabled = true;
+        }
     }
     public void Win()
     {
-
+        
+        
+        win.GetComponent<Canvas>().enabled = true;
     }
 }
