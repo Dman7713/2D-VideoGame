@@ -9,6 +9,8 @@ public class OpenDoor : MonoBehaviour
     public float width;
     public float height;
     public LayerMask whatIsPlayer;
+    public Transform endLocation;
+    GameObject player;
 
      SceneSwitch sceneSwitch;
 
@@ -18,6 +20,7 @@ public class OpenDoor : MonoBehaviour
     private void Start() 
     { 
         sceneSwitch = FindObjectOfType<SceneSwitch>();
+        player = GameObject.FindGameObjectWithTag("Player");
     }
 
 
@@ -28,7 +31,7 @@ public class OpenDoor : MonoBehaviour
         { 
          if(Input.GetKey(KeyCode.E))
             {
-                sceneSwitch.SwitchScene(SceneName);
+                player.transform.position = endLocation.transform.position;
             }
         }
     }
