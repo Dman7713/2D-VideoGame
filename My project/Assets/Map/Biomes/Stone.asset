@@ -35,7 +35,7 @@ MonoBehaviour:
     - {x: -1, y: 0, z: 0}
     - {x: 1, y: 0, z: 0}
     m_RuleTransform: 0
-  - m_Id: 0
+  - m_Id: 25
     m_Sprites:
     - {fileID: -1041768343, guid: d204789d32a563b46a710a0bc0b7c509, type: 3}
     m_GameObject: {fileID: 0}
@@ -481,8 +481,10 @@ MonoBehaviour:
     - {fileID: -713859095, guid: 9543cdfb9b572c2409ad1ea5f8b68583, type: 3}
     - {fileID: -713859095, guid: 9543cdfb9b572c2409ad1ea5f8b68583, type: 3}
     - {fileID: -713859095, guid: 9543cdfb9b572c2409ad1ea5f8b68583, type: 3}
+    - {fileID: -713859095, guid: 9543cdfb9b572c2409ad1ea5f8b68583, type: 3}
     - {fileID: -519618794, guid: d204789d32a563b46a710a0bc0b7c509, type: 3}
-    - {fileID: -1542088323, guid: d204789d32a563b46a710a0bc0b7c509, type: 3}
+    - {fileID: -519618794, guid: d204789d32a563b46a710a0bc0b7c509, type: 3}
+    - {fileID: -320861828, guid: d204789d32a563b46a710a0bc0b7c509, type: 3}
     - {fileID: -320861828, guid: d204789d32a563b46a710a0bc0b7c509, type: 3}
     - {fileID: 1631852925, guid: d204789d32a563b46a710a0bc0b7c509, type: 3}
     m_GameObject: {fileID: 0}

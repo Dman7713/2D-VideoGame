@@ -6,6 +6,7 @@ public class PlayerMovement : MonoBehaviour
 {
     float horizontalInput;
     Rigidbody2D rb;
+    Animator animator; // Reference to the Animator
 
     [SerializeField]
     float moveSpeed = 5f;
@@ -15,9 +16,8 @@ public class PlayerMovement : MonoBehaviour
     float jumpPower = 4f;
     bool isJumping = false;
     [SerializeField]
-    float coyoteTime = 1;
+    float coyoteTime = 0.2f; // Adjusted to a more reasonable value
     bool canJump = true;
-    [SerializeField]
     float timer = 0;
 
     [Header("WallMovement")]
@@ -28,27 +28,37 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>(); // Get the Animator component
     }
 
     void Update()
     {
         horizontalInput = Input.GetAxis("Horizontal");
-        if (timer > coyoteTime && !grounded)
+
+        // Check grounded status
+        if (grounded)
         {
-            canJump = false;
+            canJump = true; // Reset canJump when grounded
+            timer = 0; // Reset timer when on ground
+        }
+        else
+        {
+            timer += Time.deltaTime; // Increase timer if not grounded
         }
 
         FlipSprite();
 
-        if (Input.GetButtonDown("Jump") && !isJumping && grounded && canJump)
+        // Handle jumping
+        if (Input.GetButtonDown("Jump") && (grounded || timer < coyoteTime))
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpPower);
             isJumping = true;
             grounded = false;
-            canJump = false;
+            canJump = false; // No more jumping until grounded again
         }
 
-
+        // Update animation parameters
+        UpdateAnimations();
     }
 
     private void FixedUpdate()
@@ -81,25 +91,33 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        isJumping = false;
-        if (collision.gameObject.layer == 6)
+        if (collision.gameObject.layer == 6) // Ensure this matches your ground layer
         {
-            grounded = true;
-            canJump = true;
+            grounded = true; // Set grounded to true
+            isJumping = false; // Reset jumping state when touching ground
         }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.layer == 6)
+        if (collision.gameObject.layer == 6) // Ensure this matches your ground layer
         {
-            timer = 0;
-            grounded = false;
+            grounded = false; // Set grounded to false when leaving ground
         }
     }
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        timer = 0;
+        if (collision.gameObject.layer == 6) // Ensure this matches your ground layer
+        {
+            // No need to reset timer here, handled in Update()
+        }
+    }
+
+    void UpdateAnimations()
+    {
+        // Set Speed and IsJumping parameters for the Animator
+        animator.SetFloat("Speed", Mathf.Abs(horizontalInput)); // Use Mathf.Abs to get the absolute value for speed
+        animator.SetBool("IsJumping", !grounded); // Set IsJumping to true if not grounded
     }
 }
