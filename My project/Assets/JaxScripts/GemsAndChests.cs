@@ -23,7 +23,12 @@ public class GemsAndChests : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-       
+        gem1.GetComponent<Image>().enabled = false;
+        gem2.GetComponent<Image>().enabled = false;
+        gem3.GetComponent<Image>().enabled = false;
+        gem4.GetComponent<Image>().enabled = false;
+        win.GetComponent<Canvas>().enabled = false;
+
     }
 
     // Update is called once per frame
