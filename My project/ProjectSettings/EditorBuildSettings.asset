@@ -8,19 +8,19 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Peyton Scene.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Maps/Gem.unity
     guid: 2a000dc0fa67c9248826bb3117994299
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Maps/Lava.unity
     guid: b08621d0a7cd2f34293ef1d4c68bced1
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Maps/Sand.unity
     guid: a2aed3f529b0a5043848741e78833dd5
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Maps/Snow.unity
     guid: 61ab721be89810b46a1cd7586dbdecd8
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Main Menu.unity
     guid: 99cd53c5007197c4d8b2692b5eb1a44f
   m_configObjects: {}
