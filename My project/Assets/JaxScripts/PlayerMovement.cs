@@ -6,7 +6,7 @@ public class PlayerMovement : MonoBehaviour
 {
     float horizontalInput;
     Rigidbody2D rb;
-    Animator animator; // Reference to the Animator
+    Animator animator;
 
     [SerializeField]
     float moveSpeed = 5f;
@@ -16,48 +16,69 @@ public class PlayerMovement : MonoBehaviour
     float jumpPower = 4f;
     bool isJumping = false;
     [SerializeField]
-    float coyoteTime = 0.2f; // Adjusted to a more reasonable value
+    float coyoteTime = 0.2f;
     bool canJump = true;
     float timer = 0;
 
-    [Header("WallMovement")]
+    [Header("Jump Settings")]
+    [SerializeField]
+    private int maxJumpCount = 2; // Maximum jumps allowed before cooldown
+    private int currentJumpCount = 0; // Current jump count
+
+    [Header("Jump Cooldown")]
+    [SerializeField]
+    private float jumpCooldown = 1f; // Cooldown duration in seconds
+    private float jumpCooldownTimer = 0f; // Timer to track cooldown
+
+    [Header("Wall Movement")]
     public float wallSlideSpeed = 2;
     bool isWallSliding;
     bool grounded;
 
+    // Dust Particle System
+    [SerializeField]
+    private ParticleSystem dust; // Reference to the dust prefab
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>(); // Get the Animator component
+        animator = GetComponent<Animator>();
     }
 
     void Update()
     {
         horizontalInput = Input.GetAxis("Horizontal");
 
-        // Check grounded status
+        // Update cooldown timer
+        if (jumpCooldownTimer > 0)
+        {
+            jumpCooldownTimer -= Time.deltaTime;
+        }
+
         if (grounded)
         {
-            canJump = true; // Reset canJump when grounded
-            timer = 0; // Reset timer when on ground
+            canJump = true;
+            timer = 0;
+            currentJumpCount = 0; // Reset jump count when grounded
         }
         else
         {
-            timer += Time.deltaTime; // Increase timer if not grounded
+            timer += Time.deltaTime;
         }
 
         FlipSprite();
 
-        // Handle jumping
-        if (Input.GetButtonDown("Jump") && (grounded || timer < coyoteTime))
+        // Check if jump is allowed by cooldown and jump count
+        if (Input.GetButtonDown("Jump") && (grounded || timer < coyoteTime) && currentJumpCount < maxJumpCount && jumpCooldownTimer <= 0)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpPower);
             isJumping = true;
             grounded = false;
-            canJump = false; // No more jumping until grounded again
+            currentJumpCount++; // Increment jump count
+            jumpCooldownTimer = jumpCooldown; // Reset cooldown timer
+            CreateDust(); // Create dust when jumping
         }
 
-        // Update animation parameters
         UpdateAnimations();
     }
 
@@ -68,12 +89,10 @@ public class PlayerMovement : MonoBehaviour
 
     void FlipSprite()
     {
-        // Check the mouse position relative to the player
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         if (mousePosition.x < transform.position.x && isFacingRight)
         {
-            // Flip to face left
             isFacingRight = false;
             Vector3 ls = transform.localScale;
             ls.x *= -1;
@@ -81,7 +100,6 @@ public class PlayerMovement : MonoBehaviour
         }
         else if (mousePosition.x > transform.position.x && !isFacingRight)
         {
-            // Flip to face right
             isFacingRight = true;
             Vector3 ls = transform.localScale;
             ls.x *= -1;
@@ -91,33 +109,33 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.layer == 6) // Ensure this matches your ground layer
+        if (collision.gameObject.layer == 6)
         {
-            grounded = true; // Set grounded to true
-            isJumping = false; // Reset jumping state when touching ground
+            grounded = true;
+            isJumping = false;
+            CreateDust(); // Create dust when landing
         }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.layer == 6) // Ensure this matches your ground layer
+        if (collision.gameObject.layer == 6)
         {
-            grounded = false; // Set grounded to false when leaving ground
-        }
-    }
-
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        if (collision.gameObject.layer == 6) // Ensure this matches your ground layer
-        {
-            // No need to reset timer here, handled in Update()
+            grounded = false;
         }
     }
 
     void UpdateAnimations()
     {
-        // Set Speed and IsJumping parameters for the Animator
-        animator.SetFloat("Speed", Mathf.Abs(horizontalInput)); // Use Mathf.Abs to get the absolute value for speed
-        animator.SetBool("IsJumping", !grounded); // Set IsJumping to true if not grounded
+        animator.SetFloat("Speed", Mathf.Abs(horizontalInput));
+        animator.SetBool("IsJumping", !grounded);
+    }
+
+    void CreateDust()
+    {
+        if (dust != null)
+        {
+            dust.Play();
+        }
     }
 }

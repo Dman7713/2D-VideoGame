@@ -1,49 +1,66 @@
 using UnityEngine;
 
-public class EnemyPatrol : MonoBehaviour
+public class EnemyWander : MonoBehaviour
 {
-    public Transform[] patrolPoints; // Array of points to patrol between
-    public float patrolSpeed = 2f;   // Speed while patrolling
-    public float chaseSpeed = 5f;    // Speed while chasing
-    public float detectionRange = 5f; // Range to detect the player
-    public float returnRange = 6f;    // Range to stop chasing
+    public float moveSpeed = 2f;          // Speed at which the enemy moves
+    public float wanderTime = 2f;          // Time to wander before changing direction
+    public Vector2 wanderRange = new Vector2(5f, 5f); // Range within which the enemy will wander
 
-    private int currentPatrolIndex;
-    private Transform player;
+    public Transform player;               // Reference to the player object
+    public float detectionRange = 5f;      // Range at which the enemy will detect the player
+
+    private Vector2 targetPosition;
+    private float timer;
+    private bool chasing = false;
 
     void Start()
     {
-        currentPatrolIndex = 0;
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        SetRandomTargetPosition();
     }
 
     void Update()
     {
-        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-
-        if (distanceToPlayer < detectionRange)
+        // Check if the player is within detection range
+        if (Vector2.Distance(transform.position, player.position) < detectionRange)
         {
             ChasePlayer();
         }
-        else if (distanceToPlayer > returnRange)
+        else
         {
-            Patrol();
+            Wander();
         }
     }
 
-    void Patrol()
+    void Wander()
     {
-        Transform targetPatrolPoint = patrolPoints[currentPatrolIndex];
-        transform.position = Vector3.MoveTowards(transform.position, targetPatrolPoint.position, patrolSpeed * Time.deltaTime);
+        MoveTowardsTarget();
 
-        if (Vector3.Distance(transform.position, targetPatrolPoint.position) < 0.1f)
+        timer += Time.deltaTime;
+        if (timer >= wanderTime)
         {
-            currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Length;
+            SetRandomTargetPosition();
+            timer = 0; // Reset timer
         }
     }
 
     void ChasePlayer()
     {
-        transform.position = Vector3.MoveTowards(transform.position, player.position, chaseSpeed * Time.deltaTime);
+        // Move towards the player
+        targetPosition = player.position;
+        MoveTowardsTarget();
+    }
+
+    void MoveTowardsTarget()
+    {
+        // Move the enemy towards the target position
+        transform.position = Vector2.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+    }
+
+    void SetRandomTargetPosition()
+    {
+        // Generate a random position within the defined wander range
+        float randomX = Random.Range(-wanderRange.x, wanderRange.x);
+        float randomY = Random.Range(-wanderRange.y, wanderRange.y);
+        targetPosition = new Vector2(transform.position.x + randomX, transform.position.y + randomY);
     }
 }
